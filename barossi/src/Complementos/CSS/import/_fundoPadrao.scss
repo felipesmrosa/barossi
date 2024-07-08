@@ -1,0 +1,17 @@
+.fundoPadrao {
+  .titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 15px 20px;
+
+    &__botao {
+      background: $amarelo;
+      border: none;
+      border-radius: 28px;
+      padding: 4px 16px;
+      font-size: 18px;
+    }
+  }
+}

@@ -1,10 +1,10 @@
-import React from 'react'
+import React from "react";
+import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 
 export function Alunos() {
   return (
-    <div>
-      <h1> Alunos </h1>
-      <h3>ÉÉÉÉÉ GUIIIILHERME TA DANDO CERTO</h3>
+    <div className="fundoPadrao">
+      <Titulo titulo={"Alunos"} botao={"Cadastrar"} />
     </div>
   );
 }
