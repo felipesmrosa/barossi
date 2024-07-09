@@ -14,6 +14,7 @@ export function Menu({ isOpen, abrirFechar }) {
       <ul>
         <li onClick={() => redirecionador('/dashboard')}>Inicio</li>
         <li onClick={() => redirecionador('/alunos')}>Alunos</li>
+        <li onClick={() => redirecionador('/alunos')}>Paga Ohana aí</li>
       </ul>
     </div>
   );

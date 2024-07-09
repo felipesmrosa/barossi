@@ -1,10 +1,11 @@
 .fundoPadrao {
+  padding: 15px 20px;
+
   .titulo {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    padding: 15px 20px;
+    padding: 0px 0px 20px 0px;
 
     &__botao {
       background: $amarelo;
@@ -13,5 +14,11 @@
       padding: 4px 16px;
       font-size: 18px;
     }
+  }
+
+  .cardPadrao {
+    border-radius: 6px;
+    border: 1px solid $borda-card;
+    padding: 14px;
   }
 }
