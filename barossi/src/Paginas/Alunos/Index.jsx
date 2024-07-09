@@ -1,5 +1,8 @@
 import React from "react";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
+import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
 
 const alunos = [
   {
@@ -10,6 +13,14 @@ const alunos = [
     data_matricula: "08/07/2024",
     ativo: true,
   },
+  {
+    id: 2,
+    aluno: "Felipe Miranda",
+    cpf: "018.850.270.01",
+    telefone: "(47) 99142-4212",
+    data_matricula: "17/02/2022",
+    ativo: true,
+  },
 ];
 
 export function Alunos() {
@@ -17,13 +28,19 @@ export function Alunos() {
     <div className="fundoPadrao">
       <Titulo titulo={"Alunos"} botao={"Cadastrar"} />
 
-      {alunos.map((aluno) => (
-        // <Card />
-
-        <div className="cardPadrao" key={aluno.id}>
-          <b>{aluno.aluno} - <b style={{color: "#24702a"}}>{aluno.cpf}</b></b>
-        </div>
-      ))}
+      <div className="cardPadrao">
+        {alunos.map((aluno) => (
+          <div className="cardPadrao__card" key={aluno.id}>
+            <b className="cardPadrao__card__informacaoPrincipal">
+              {aluno.aluno} - <b style={{ color: "#24702a" }}>{aluno.cpf}</b>
+            </b>
+            <p className="cardPadrao__card__informacaoAdicional">
+              <FontAwesomeIcon icon={faPhone} /> {aluno.telefone}
+            </p>
+            <BotoesDeAcao />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
