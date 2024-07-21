@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import InputMask from "react-input-mask";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
@@ -15,6 +15,33 @@ export function CadastroDeAlunos() {
   const [selectedModalidades, setSelectedModalidades] = useState([]);
   const [mensalidade, setMensalidade] = useState("");
   const [desconto, setDesconto] = useState("");
+
+  useEffect(() => {
+    // Atualiza a mensalidade sempre que o desconto ou a seleção de modalidades mudar
+    const atualizarMensalidade = () => {
+      // Calcula a soma das mensalidades
+      const totalMensalidade = selectedModalidades.reduce((total, option) => {
+        const modalidade = modalidades.find((m) => m.value === option.value);
+        return (
+          total +
+          (modalidade
+            ? parseFloat(
+                modalidade.mensalidade.replace(".", "").replace(",", ".")
+              )
+            : 0)
+        );
+      }, 0);
+
+      // Aplica o desconto
+      const descontoValor = desconto ? parseFloat(desconto) / 100 : 0;
+      const valorComDesconto = totalMensalidade * (1 - descontoValor);
+
+      // Atualiza o estado com o valor formatado
+      setMensalidade(valorComDesconto);
+    };
+
+    atualizarMensalidade();
+  }, [selectedModalidades, desconto]);
 
   const handleCpfChange = (event) => {
     const newCpf = event.target.value;
