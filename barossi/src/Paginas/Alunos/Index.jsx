@@ -3,6 +3,7 @@ import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
+import { useNavigate } from "react-router-dom";
 
 const alunos = [
   {
@@ -24,9 +25,16 @@ const alunos = [
 ];
 
 export function Alunos() {
+
+  const navigate = useNavigate();
+
+  const cadastrarAluno = () => {
+    navigate('/aluno/cadastrar');
+  };
+
   return (
     <div className="fundoPadrao">
-      <Titulo titulo={"Alunos"} botao={"Cadastrar"} />
+      <Titulo voltarPagina={false} click={cadastrarAluno} titulo={"Alunos"} botao={"Cadastrar"} />
 
       <div className="cardPadrao">
         {alunos.map((aluno) => (
