@@ -1,49 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
 import { useNavigate } from "react-router-dom";
-
-const alunos = [
-  {
-    id: 1,
-    aluno: "Guilherme Barossi",
-    cpf: "012.345.678-90",
-    telefone: "(99) 99999-9999",
-    data_matricula: "08/07/2024",
-    ativo: true,
-  },
-  {
-    id: 2,
-    aluno: "Felipe Miranda",
-    cpf: "018.850.270.01",
-    telefone: "(47) 99142-4212",
-    data_matricula: "17/02/2022",
-    ativo: true,
-  },
-];
+import { bancoDeDados } from "../../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export function Alunos() {
-
+  const alunosBD = collection(bancoDeDados, "alunos");
+  const [alunos, setAlunos] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getAlunos = async () => {
+      const data = await getDocs(alunosBD);
+      setAlunos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getAlunos();
+  }, []);
+
   const cadastrarAluno = () => {
-    navigate('/aluno/cadastrar');
+    navigate("/aluno/cadastrar");
   };
 
   return (
     <div className="fundoPadrao">
-      <Titulo voltarPagina={false} click={cadastrarAluno} titulo={"Alunos"} botao={"Cadastrar"} />
+      <Titulo
+        voltarPagina={false}
+        click={cadastrarAluno}
+        titulo={"Alunos"}
+        botao={"Cadastrar"}
+      />
 
       <div className="cardPadrao">
         {alunos.map((aluno) => (
           <div className="cardPadrao__card" key={aluno.id}>
             <b className="cardPadrao__card__informacaoPrincipal">
-              {aluno.aluno} - <b style={{ color: "#24702a" }}>{aluno.cpf}</b>
+              {aluno.nomeCompleto} -{" "}
+              <b style={{ color: "#24702a" }}>{aluno.cpf}</b>
             </b>
             <p className="cardPadrao__card__informacaoAdicional">
-              <FontAwesomeIcon icon={faPhone} /> {aluno.telefone}
+              <FontAwesomeIcon icon={faPhone} /> {aluno.whatsapp}
             </p>
             <BotoesDeAcao />
           </div>
