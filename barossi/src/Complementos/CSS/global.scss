@@ -1,6 +1,6 @@
-$cinza: #2E2E2E;
-$gradient_Cinza: linear-gradient(180deg, #333333, #1C1C1C);
-$amarelo: #f8a11e; 
+$cinza: #2e2e2e;
+$gradient_Cinza: linear-gradient(180deg, #333333, #1c1c1c);
+$amarelo: #f8a11e;
 $verde: #24702a;
 $azul: #3b95e0;
 $vermelho: #e64c30;
@@ -8,15 +8,20 @@ $branco: #dddddd;
 $borda-card: #cbcbcb;
 
 * {
-    margin: 0;
-    padding: 0;
-    font-family: 'Nunito';
+  margin: 0;
+  padding: 0;
+  font-family: "Nunito";
 }
 
 body {
-    background-color: $branco;
+  background-color: $branco;
 }
 
-p, svg, button, a {
-    color: $cinza;
+p,
+svg,
+button,
+a,
+input,
+select {
+  color: $cinza;
 }
