@@ -52,7 +52,7 @@ export function AlunoForm() {
         setFormData({
           nomeCompleto: alunoData.nomeCompleto,
           whatsapp: alunoData.whatsapp,
-          responsavel: alunoData.responsavel,
+          responsavel: alunoData.responsavel || "",
           cep: alunoData.cep,
           endereco: alunoData.endereco,
           numero: alunoData.numero,
@@ -113,7 +113,7 @@ export function AlunoForm() {
   };
 
   const handleMaiorDeIdadeChange = (selectedOption) => {
-    const value = selectedOption.value === "sim";
+    const value = selectedOption?.value === "sim";
     setMaiorDeIdade(value);
     if (value) {
       setFormData((prevData) => ({ ...prevData, responsavel: "" }));
@@ -242,7 +242,7 @@ export function AlunoForm() {
       modalidades: selectedModalidades,
       mensalidade,
       desconto,
-      maiorDeIdade,
+      maiorDeIdade, // Valor booleano para o banco de dados
       timestamp: new Date(),
     };
 
@@ -283,7 +283,8 @@ export function AlunoForm() {
       modalidades: selectedModalidades,
       mensalidade,
       desconto,
-      maiorDeIdade,
+      maiorDeIdade, // Valor booleano para o banco de dados
+      timestamp: new Date(),
     };
 
     try {
@@ -336,21 +337,11 @@ export function AlunoForm() {
               component={
                 <Select
                   options={maiorDeIdadeData}
-                  onChange={handleMaiorDeIdadeChange}
                   value={maiorDeIdadeData.find(
-                    (option) => option.value === (maiorDeIdade ? "sim" : "não")
+                    (option) => option.value === (maiorDeIdade ? "sim" : "nao")
                   )}
+                  onChange={handleMaiorDeIdadeChange}
                   styles={customStyles}
-                  name="maiorDeIdade"
-                  // options={maiorDeIdadeData}
-                  placeholder="Selecione..."
-                  // value={
-                  //   maiorDeIdade === null
-                  //     ? { value: "sim", label: "Sim" } // Ajuste conforme a necessidade
-                  //     : maiorDeIdade
-                  //     ? { value: "sim", label: "Sim" }
-                  //     : { value: "nao", label: "Não" }
-                  // }
                 />
               }
             />
@@ -359,6 +350,7 @@ export function AlunoForm() {
               <FormInput
                 label="Responsável"
                 type="text"
+                id="responsavel"
                 name="responsavel"
                 value={formData.responsavel}
                 onChange={handleInputChange}
