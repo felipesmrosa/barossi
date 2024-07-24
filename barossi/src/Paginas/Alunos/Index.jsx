@@ -42,7 +42,7 @@ export function Alunos() {
     const fetchAlunos = async () => {
       setLoading(true);
       try {
-        const q = query(alunosBD, orderBy("timestamp", "desc"), limit(3));
+        const q = query(alunosBD, orderBy("timestamp", "desc"), limit(1000));
         const data = await getDocs(q);
         const alunosData = data.docs.map((doc) => ({
           ...doc.data(),
