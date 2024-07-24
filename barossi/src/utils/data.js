@@ -11,6 +11,7 @@ export const customStyles = {
     "&:hover": {
       borderColor: "#borda-card",
     },
+    color: "#000"
   }),
   valueContainer: (provided, state) => ({
     ...provided,
@@ -24,10 +25,10 @@ export const customStyles = {
   option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected
-      ? "#0052CC"
-      : state.isFocused
-      ? "#E3E3E3"
-      : "white",
+    ? "#0052CC"
+    : state.isFocused
+    ? "#E3E3E3"
+    : "white",
     color: state.isSelected ? "white" : "black",
     "&:hover": {
       backgroundColor: "#E3E3E3",
@@ -35,7 +36,7 @@ export const customStyles = {
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: "#0052CC",
+    color: "#000",
   }),
   placeholder: (provided) => ({
     ...provided,
@@ -58,4 +59,9 @@ export const modalidades = [
   { value: "pilates", label: "Pilates", mensalidade: "150,00" },
   { value: "muayThai", label: "Muay Thai", mensalidade: "210,00" },
   { value: "jiuJitsu", label: "Jiu-Jítsu", mensalidade: "230,00" },
+];
+
+export const maiorDeIdadeData = [
+  { value: "sim", label: "Sim" },
+  { value: "nao", label: "Não" },
 ];
