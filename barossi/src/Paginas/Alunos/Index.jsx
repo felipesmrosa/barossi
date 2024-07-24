@@ -123,6 +123,20 @@ export function Alunos() {
     return searchMatch && modalidadeMatch;
   });
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(bancoDeDados, "alunos", id));
+      setAlunos((prevAlunos) => prevAlunos.filter((aluno) => aluno.id !== id));
+      toast.success("Aluno excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir aluno: ", error);
+      toast.error("Erro ao excluir aluno. Tente novamente.");
+    } finally {
+      setIsModalOpen(false);
+      setSelectedAluno(null);
+    }
+  };
+
   return (
     <div className="fundoPadrao">
       <ToastContainer autoClose={500} pauseOnHover draggable />
@@ -190,7 +204,10 @@ export function Alunos() {
               )}
               <BotoesDeAcao
                 onEdit={() => navigate(`/aluno/editar/${aluno.id}`)}
-                onDelete={() => setSelectedAluno(aluno.id)}
+                onDelete={() => {
+                  setSelectedAluno(aluno.id);
+                  setIsModalOpen(true);
+                }}
               />
             </div>
           ))
@@ -210,15 +227,7 @@ export function Alunos() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={async () => {
-          if (selectedAluno) {
-            await deleteDoc(doc(bancoDeDados, "alunos", selectedAluno));
-            setAlunos(alunos.filter((aluno) => aluno.id !== selectedAluno));
-            toast.success("Aluno excluído com sucesso!");
-            setIsModalOpen(false);
-            setSelectedAluno(null);
-          }
-        }}
+        onConfirm={() => selectedAluno && handleDelete(selectedAluno)}
         message="Você tem certeza que deseja excluir este aluno?"
       />
     </div>

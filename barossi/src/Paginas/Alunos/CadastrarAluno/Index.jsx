@@ -64,7 +64,7 @@ export function AlunoForm() {
         setSelectedModalidades(alunoData.modalidades || []);
         setMensalidade(alunoData.mensalidade || "");
         setDesconto(alunoData.desconto || "");
-        setMaiorDeIdade(alunoData.maiorDeIdade ?? true); // Defina como true se desejar "Sim" como padrão
+        setMaiorDeIdade(alunoData.maiorDeIdade ?? true);
       };
 
       fetchAluno();
@@ -179,7 +179,6 @@ export function AlunoForm() {
   const validarCampos = () => {
     const camposObrigatorios = [
       "nomeCompleto",
-      "responsavel",
       "whatsapp",
       "cep",
       "endereco",
@@ -208,6 +207,11 @@ export function AlunoForm() {
 
     if (mensalidade === undefined || mensalidade === null) {
       toast.error("O campo mensalidade é obrigatório");
+      return false;
+    }
+
+    if (!maiorDeIdade && !formData.responsavel) {
+      toast.error("O campo responsável é obrigatório para menores de idade");
       return false;
     }
 
@@ -263,7 +267,7 @@ export function AlunoForm() {
         cidade: "",
         complemento: "",
       });
-      setMaiorDeIdade(null);
+      setMaiorDeIdade(true); // Ajuste para definir como verdadeiro ao cadastrar um novo aluno
     } catch (error) {
       console.error("Erro ao cadastrar aluno: ", error);
       toast.error("Erro ao cadastrar aluno. Tente novamente.");
@@ -285,8 +289,10 @@ export function AlunoForm() {
     try {
       const alunoDoc = doc(bancoDeDados, "alunos", id);
       await updateDoc(alunoDoc, alunoData);
+      toast.success("Aluno atualizado com sucesso!");
       navigate("/alunos");
     } catch (error) {
+      console.error("Erro ao atualizar aluno: ", error);
       toast.error("Erro ao atualizar aluno. Tente novamente.");
     }
   };
@@ -329,18 +335,22 @@ export function AlunoForm() {
               label="Maior de idade?"
               component={
                 <Select
+                  options={maiorDeIdadeData}
+                  onChange={handleMaiorDeIdadeChange}
+                  value={maiorDeIdadeData.find(
+                    (option) => option.value === (maiorDeIdade ? "sim" : "não")
+                  )}
                   styles={customStyles}
                   name="maiorDeIdade"
-                  options={maiorDeIdadeData}
+                  // options={maiorDeIdadeData}
                   placeholder="Selecione..."
-                  value={
-                    maiorDeIdade === null
-                      ? { value: "sim", label: "Sim" } // Ajuste conforme a necessidade
-                      : maiorDeIdade
-                      ? { value: "sim", label: "Sim" }
-                      : { value: "nao", label: "Não" }
-                  }
-                  onChange={handleMaiorDeIdadeChange}
+                  // value={
+                  //   maiorDeIdade === null
+                  //     ? { value: "sim", label: "Sim" } // Ajuste conforme a necessidade
+                  //     : maiorDeIdade
+                  //     ? { value: "sim", label: "Sim" }
+                  //     : { value: "nao", label: "Não" }
+                  // }
                 />
               }
             />
@@ -352,7 +362,7 @@ export function AlunoForm() {
                 name="responsavel"
                 value={formData.responsavel}
                 onChange={handleInputChange}
-                required={!maiorDeIdade}
+                disabled={maiorDeIdade}
               />
             )}
             <FormInput
