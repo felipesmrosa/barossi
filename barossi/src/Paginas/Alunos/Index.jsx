@@ -26,8 +26,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Modal from "@/Componentes/Modal/ConfirmarDelete";
 import { modalidades } from "@/utils/data"; // Importa as modalidades
 
-const normalizeText = (text) => text.replace(/\D/g, "");
-
 export function Alunos() {
   const alunosBD = collection(bancoDeDados, "alunos");
   const [alunos, setAlunos] = useState([]);
@@ -44,11 +42,7 @@ export function Alunos() {
     const fetchAlunos = async () => {
       setLoading(true);
       try {
-        const q = query(
-          alunosBD,
-          orderBy("timestamp", "desc"),
-          limit(100) // Aumente o limite se necessário, para garantir que todos os alunos sejam carregados
-        );
+        const q = query(alunosBD, orderBy("timestamp", "desc"), limit(3));
         const data = await getDocs(q);
         const alunosData = data.docs.map((doc) => ({
           ...doc.data(),
@@ -56,7 +50,7 @@ export function Alunos() {
         }));
         setAlunos(alunosData);
         setLastVisible(data.docs[data.docs.length - 1]);
-        setHasMore(data.docs.length === 4);
+        setHasMore(data.docs.length === 3);
       } catch (error) {
         console.error("Erro ao buscar alunos: ", error);
         toast.error("Erro ao buscar alunos. Tente novamente.");
@@ -78,7 +72,7 @@ export function Alunos() {
         alunosBD,
         orderBy("timestamp", "desc"),
         startAfter(lastVisible),
-        limit(4)
+        limit(3)
       );
       const data = await getDocs(q);
       const alunosData = data.docs.map((doc) => ({
@@ -87,7 +81,7 @@ export function Alunos() {
       }));
       setAlunos((prevAlunos) => [...prevAlunos, ...alunosData]);
       setLastVisible(data.docs[data.docs.length - 1]);
-      setHasMore(data.docs.length === 4);
+      setHasMore(data.docs.length === 3);
     } catch (error) {
       console.error("Erro ao buscar mais alunos: ", error);
       toast.error("Erro ao buscar mais alunos. Tente novamente.");
@@ -104,19 +98,25 @@ export function Alunos() {
     setSelectedModalidade(e.target.value);
   };
 
+  const normalizeText = (text) => text.replace(/\s+/g, "").toLowerCase();
+  const removeMask = (text) => text.replace(/[^\d]/g, "");
+
   const filteredAlunos = alunos.filter((aluno) => {
     const normalizedSearch = normalizeText(search);
-    const normalizedCpf = normalizeText(aluno.cpf);
-    const normalizedWhatsapp = normalizeText(aluno.whatsapp);
+    const normalizedCpf = removeMask(aluno.cpf || "");
+    const normalizedWhatsapp = removeMask(aluno.whatsapp || "");
+    const normalizedNomeCompleto = normalizeText(aluno.nomeCompleto || "");
 
     const searchMatch =
       normalizedCpf.includes(normalizedSearch) ||
       normalizedWhatsapp.includes(normalizedSearch) ||
-      aluno.nomeCompleto.toLowerCase().includes(search.toLowerCase());
+      normalizedNomeCompleto.includes(normalizedSearch);
 
     const modalidadeMatch = selectedModalidade
       ? aluno.modalidades?.some(
-          (modalidade) => modalidade.label === selectedModalidade
+          (modalidade) =>
+            normalizeText(modalidade.label) ===
+            normalizeText(selectedModalidade)
         )
       : true;
 
