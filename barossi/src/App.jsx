@@ -6,24 +6,32 @@ import { Login } from "./Paginas/Home/Index";
 import { PaginaDeErro } from "./Componentes/PaginaDeErro/Index";
 import { Alunos } from "./Paginas/Alunos/Index";
 import { ToastContainer } from "react-toastify";
-import { AlunoForm } from "./Paginas/Alunos/CadastrarAluno/Index";
+import { AlunoForm } from "./Paginas/Alunos/AlunoForm/Index";
+import PrivateRoute from "./RotaPrivada/Index";
+import AuthListener from "./utils/Autenticador";
 
 export function App() {
   return (
     <>
-      <ToastContainer
-        autoClose={500} // Tempo em milissegundos
-        pauseOnHover
-        draggable
-      />
+      <AuthListener />
+      <ToastContainer autoClose={500} draggable />
       <Routes>
         <Route path="*" element={<PaginaDeErro />} />
-        <Route path="/" element={<Login />}></Route>
+        <Route path="/" element={<Login />} />
         <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/alunos" element={<Alunos />} />
-          <Route path="/aluno/cadastrar" element={<AlunoForm />} />
-          <Route path="/aluno/editar/:id" element={<AlunoForm />} />
+          <Route
+            path="/dashboard"
+            element={<PrivateRoute element={Dashboard} />}
+          />
+          <Route path="/alunos" element={<PrivateRoute element={Alunos} />} />
+          <Route
+            path="/aluno/cadastrar"
+            element={<PrivateRoute element={AlunoForm} />}
+          />
+          <Route
+            path="/aluno/editar/:id"
+            element={<PrivateRoute element={AlunoForm} />}
+          />
         </Route>
       </Routes>
     </>

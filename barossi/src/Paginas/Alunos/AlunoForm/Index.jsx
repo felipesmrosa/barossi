@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { FormInputCard } from "@/Componentes/FundoPadrao/FormInputCard/Index";
 
 export function AlunoForm() {
   const { id } = useParams();
@@ -311,14 +312,14 @@ export function AlunoForm() {
       <div className="cardPadrao">
         <div style={{ padding: "14px" }} className="cardPadrao__card">
           <div className="cardPadrao__card__formulario">
-            <FormInput
+            <FormInputCard
               label="Nome completo"
               type="text"
               name="nomeCompleto"
               value={formData.nomeCompleto}
               onChange={handleInputChange}
             />
-            <FormInput
+            <FormInputCard
               label="CPF"
               type="text"
               component={
@@ -332,7 +333,7 @@ export function AlunoForm() {
               }
               error={cpfError}
             />
-            <FormInput
+            <FormInputCard
               label="Maior de idade?"
               component={
                 <Select
@@ -347,7 +348,7 @@ export function AlunoForm() {
             />
 
             {!maiorDeIdade && (
-              <FormInput
+              <FormInputCard
                 label="Responsável"
                 type="text"
                 id="responsavel"
@@ -357,7 +358,7 @@ export function AlunoForm() {
                 disabled={maiorDeIdade}
               />
             )}
-            <FormInput
+            <FormInputCard
               label="Whatsapp"
               type="text"
               name="whatsapp"
@@ -370,7 +371,7 @@ export function AlunoForm() {
                 />
               }
             />
-            <FormInput
+            <FormInputCard
               label="Modalidade"
               component={
                 <Select
@@ -386,7 +387,7 @@ export function AlunoForm() {
                 />
               }
             />
-            <FormInput
+            <FormInputCard
               label="Desconto (%)"
               type="number"
               value={desconto}
@@ -396,7 +397,7 @@ export function AlunoForm() {
               step="0.01"
               required={false}
             />
-            <FormInput
+            <FormInputCard
               label="Mensalidade"
               component={
                 <div
@@ -436,42 +437,14 @@ export function AlunoForm() {
 
 // Componentes auxiliares
 
-const FormInput = ({
-  label,
-  type,
-  component,
-  value,
-  onChange,
-  min,
-  max,
-  step,
-  error,
-  name,
-  required = true,
-}) => (
-  <div className="cardPadrao__card__formulario__input">
-    <label id={required ? "required" : undefined}>{label}</label>
-    {component || (
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        min={min}
-        max={max}
-        step={step}
-        name={name}
-      />
-    )}
-    {error && <p style={{ color: "red" }}>{error}</p>}
-  </div>
-);
+
 
 const EnderecoForm = ({ formData, handleInputChange, handleCepChange }) => (
   <>
     <div id="separacao" className="cardPadrao__card__formulario--titulo">
       <p>Endereço</p>
     </div>
-    <FormInput
+    <FormInputCard
       label="CEP"
       type="text"
       component={
@@ -491,7 +464,7 @@ const EnderecoForm = ({ formData, handleInputChange, handleCepChange }) => (
       { label: "Cidade", name: "cidade" },
       { label: "Complemento", name: "complemento" },
     ].map((field) => (
-      <FormInput
+      <FormInputCard
         key={field.label}
         label={field.label}
         type="text"

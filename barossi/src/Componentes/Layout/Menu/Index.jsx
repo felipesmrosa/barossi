@@ -1,3 +1,4 @@
+import { getAuth, signOut } from "firebase/auth";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,27 @@ export function Menu({ isOpen, abrirFechar }) {
     navigate(path);
     setClickedItem(index);
     setTimeout(() => setClickedItem(null), 300); // Remove a classe após a animação
+  };
+
+  const auth = getAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+
+      const lembrarConta = localStorage.getItem("lembrarme");
+
+      // Se "Lembrar-me" estiver ativado, mantenha os dados no localStorage
+      if (!lembrarConta) {
+        localStorage.removeItem("emailAutenticado");
+        localStorage.removeItem("senhaAutenticada");
+      }
+
+      // Redirecionar para a página de login após logout
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
   };
 
   return (
@@ -28,10 +50,10 @@ export function Menu({ isOpen, abrirFechar }) {
           Alunos
         </li>
         <li
-          onClick={() => redirecionador("/alunos", 2)}
+          onClick={handleLogout}
           className={clickedItem === 2 ? "clicked" : ""}
         >
-          Paga Ohana aí
+          Deslogar
         </li>
       </ul>
     </div>
