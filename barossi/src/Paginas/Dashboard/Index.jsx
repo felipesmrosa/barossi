@@ -9,14 +9,12 @@ export function Dashboard() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        paddingTop: "12px"
+        paddingTop: "12px",
       }}
     >
       <h3>
         <FontAwesomeIcon icon={faTriangleExclamation} />
         Em Desenvolvimento.
-        <br />
-        Vá para a página de Alunos.
       </h3>
     </div>
   );

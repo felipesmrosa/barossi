@@ -53,12 +53,13 @@ export const customStyles = {
 };
 
 export const modalidades = [
-  { value: "kungFu", label: "Kung Fu", mensalidade: "200,00" },
-  { value: "boxChines", label: "Box Chinês", mensalidade: "180,00" },
-  { value: "taekwondo", label: "Taekwondo", mensalidade: "220,00" },
-  { value: "pilates", label: "Pilates", mensalidade: "150,00" },
-  { value: "muayThai", label: "Muay Thai", mensalidade: "210,00" },
-  { value: "jiuJitsu", label: "Jiu-Jítsu", mensalidade: "230,00" },
+  { value: "pilates", label: "Pilates", mensalidade: "200,00" },
+  { value: "taekwondo", label: "Taekwondo", mensalidade: "130,00" },
+  { value: "boxeChines", label: "Boxe Chinês", mensalidade: "100,00" },
+  { value: "kungFu", label: "Kung Fu", mensalidade: "160,00" },
+  { value: "ginasticaRitmica", label: "Ginastica Ritmica", mensalidade: "180,00" },
+  { value: "karate", label: "Karate", mensalidade: "150,00" },
+  { value: "jiuJitsu", label: "Jiu-Jítsu", mensalidade: "95,00" },
 ];
 
 export const maiorDeIdadeData = [

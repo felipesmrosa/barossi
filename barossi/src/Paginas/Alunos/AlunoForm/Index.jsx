@@ -121,12 +121,6 @@ export function AlunoForm() {
     }
   };
 
-  const handleDescontoChange = (event) => {
-    let newDesconto = event.target.value;
-    if (parseFloat(newDesconto) > 100) newDesconto = "100";
-    setDesconto(newDesconto);
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -242,7 +236,6 @@ export function AlunoForm() {
       cpf,
       modalidades: selectedModalidades,
       mensalidade,
-      desconto,
       maiorDeIdade, // Valor booleano para o banco de dados
       timestamp: new Date(),
     };
@@ -256,7 +249,6 @@ export function AlunoForm() {
       setCpfError("");
       setSelectedModalidades([]);
       setMensalidade("");
-      setDesconto("");
       setFormData({
         nomeCompleto: "",
         responsavel: "",
@@ -283,7 +275,6 @@ export function AlunoForm() {
       cpf,
       modalidades: selectedModalidades,
       mensalidade,
-      desconto,
       maiorDeIdade, // Valor booleano para o banco de dados
       timestamp: new Date(),
     };
@@ -388,16 +379,6 @@ export function AlunoForm() {
               }
             />
             <FormInputCard
-              label="Desconto (%)"
-              type="number"
-              value={desconto}
-              onChange={handleDescontoChange}
-              min="0"
-              max="100"
-              step="0.01"
-              required={false}
-            />
-            <FormInputCard
               label="Mensalidade"
               component={
                 <div
@@ -413,10 +394,10 @@ export function AlunoForm() {
                     thousandSeparator="."
                     decimalSeparator=","
                     prefix="R$ "
-                    displayType="text"
-                    renderText={(formattedValue) => (
-                      <input type="text" value={formattedValue} readOnly />
-                    )}
+                    onValueChange={(values) => {
+                      const { value } = values;
+                      setMensalidade(value);
+                    }}
                     style={mensalidadeInputStyle}
                   />
                 </div>
@@ -436,8 +417,6 @@ export function AlunoForm() {
 }
 
 // Componentes auxiliares
-
-
 
 const EnderecoForm = ({ formData, handleInputChange, handleCepChange }) => (
   <>
@@ -494,5 +473,4 @@ const mensalidadeInputStyle = {
   padding: "0 10px",
   boxSizing: "border-box",
   background: "transparent",
-  cursor: "not-allowed",
 };
