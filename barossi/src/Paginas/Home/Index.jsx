@@ -65,7 +65,7 @@ export function Login() {
       </div>
       <div className="login__formulario">
         <div className="login__formulario__input">
-          <label id="required"> Usuário </label>
+          <label id="required"> Email </label>
           <input
             type="text"
             value={formData.email}
