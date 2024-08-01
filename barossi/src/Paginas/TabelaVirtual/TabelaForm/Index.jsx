@@ -15,8 +15,8 @@ export function TabelaForm() {
 
   const [items, setItems] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [newItem, setNewItem] = useState({ coluna: "", descricao: "" });
-  const [form, setForm] = useState({ nomeDaTabela: "", descricao: "" });
+  const [newItem, setNewItem] = useState({ nome: "", descricao: "", valor: "" });
+  const [form, setForm] = useState({ nomeDaTabela: "", descricao: ""});
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
@@ -49,15 +49,15 @@ export function TabelaForm() {
 
   const validateForm = () => {
     if (!form.nomeDaTabela || !form.descricao) {
-      toast.error("Todos os campos são obrigatórios!");
+      toast.error("Preencha todos os campos obrigatórios!");
       return false;
     }
     return true;
   };
 
   const validateNewItem = () => {
-    if (!newItem.coluna || !newItem.descricao) {
-      toast.error("Todos os campos do item são obrigatórios!");
+    if (!newItem.nome || !newItem.descricao) {
+      toast.error("Preencha todos os campos obrigatórios!");
       return false;
     }
     return true;
@@ -65,7 +65,7 @@ export function TabelaForm() {
 
   const openModal = () => {
     setModalIsOpen(true);
-    setNewItem({ coluna: "", descricao: "" });
+    setNewItem({ nome: "", descricao: "", valor: "" });
     setEditIndex(null);
   };
 
@@ -81,7 +81,7 @@ export function TabelaForm() {
     } else {
       setItems([...items, newItem]);
     }
-    setNewItem({ coluna: "", descricao: "" });
+    setNewItem({ nome: "", descricao: "", valor: "" });
     closeModal();
   };
 
@@ -177,10 +177,13 @@ export function TabelaForm() {
                 className="cardPadrao__card"
               >
                 <p className="cardPadrao__card__informacaoPrincipal">
-                  <strong>Coluna:</strong> {item.coluna}
+                  <strong>Nome:</strong> {item.nome}
                 </p>
                 <p className="cardPadrao__card__informacaoPrincipal">
                   <strong>Descrição:</strong> {item.descricao}
+                </p>
+                <p className="cardPadrao__card__informacaoPrincipal">
+                  <strong>Valor:</strong> {item.valor}
                 </p>
                 <BotoesDeAcao
                   onEdit={() => editItem(index)}

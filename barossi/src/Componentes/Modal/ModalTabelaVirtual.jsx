@@ -24,10 +24,10 @@ export const ModalTabelaVirtual = ({
         <div className="cardPadrao">
           <div className="cardPadrao__card__formulario">
             <FormInputCard
-              label="Coluna"
+              label="Nome"
               type="text"
-              name="coluna"
-              value={newItem.coluna}
+              name="nome"
+              value={newItem.nome}
               onChange={handleNewItemChange}
             />
             <FormInputCard
@@ -36,6 +36,14 @@ export const ModalTabelaVirtual = ({
               name="descricao"
               value={newItem.descricao}
               onChange={handleNewItemChange}
+            />
+            <FormInputCard
+              label="Valor"
+              type="number"
+              name="valor"
+              value={newItem.valor}
+              onChange={handleNewItemChange}
+              required={false}
             />
           </div>
           <div className="modal-buttons">

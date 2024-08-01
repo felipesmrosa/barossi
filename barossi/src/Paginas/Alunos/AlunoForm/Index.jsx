@@ -64,8 +64,8 @@ export function AlunoForm() {
           const items = data.itens || []; // Supondo que 'itens' seja o array no documento
 
           const options = items.map((item) => ({
-            value: item.descricao,
-            label: item.coluna,
+            value: item.valor,
+            label: item.nome,
           }));
 
           setModalidades(options);

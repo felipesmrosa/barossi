@@ -181,8 +181,8 @@ export function Alunos() {
         <select value={selectedModalidade} onChange={handleModalidadeChange}>
           <option value="">Todas Modalidades</option>
           {modalidades.map((modalidade) => (
-            <option key={modalidade.id} value={modalidade.coluna}>
-              {modalidade.coluna}
+            <option key={modalidade.id} value={modalidade.nome}>
+              {modalidade.nome}
             </option>
           ))}
         </select>
