@@ -4,9 +4,9 @@ import Select from "react-select";
 import InputMask from "react-input-mask";
 import { NumberFormatBase } from "react-number-format";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
-import { modalidades, customStyles, maiorDeIdadeData } from "@/utils/data";
+import { customStyles, maiorDeIdadeData } from "@/utils/data";
 import { validarCPF } from "@/utils/validaCPF";
-import { bancoDeDados } from "../../../../firebase";
+import { bancoDeDados } from "@/firebase.js";
 import {
   collection,
   addDoc,
@@ -43,6 +43,42 @@ export function AlunoForm() {
     complemento: "",
   });
   const [maiorDeIdade, setMaiorDeIdade] = useState(true);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  const [modalidades, setModalidades] = useState([]);
+
+  console.log("modalidades:", modalidades);
+
+  useEffect(() => {
+    const fetchModalidades = async () => {
+      try {
+        const docRef = doc(
+          bancoDeDados,
+          "tabelavirtual",
+          "V1g0AZ0EV0ZjLwViOYWb"
+        );
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const items = data.itens || []; // Supondo que 'itens' seja o array no documento
+
+          const options = items.map((item) => ({
+            value: item.descricao,
+            label: item.coluna,
+          }));
+
+          setModalidades(options);
+        } else {
+          console.log("Documento não encontrado!");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      }
+    };
+
+    fetchModalidades();
+  }, []);
 
   useEffect(() => {
     if (isEditMode) {
@@ -66,15 +102,20 @@ export function AlunoForm() {
         setMensalidade(alunoData.mensalidade || "");
         setDesconto(alunoData.desconto || "");
         setMaiorDeIdade(alunoData.maiorDeIdade ?? true);
+        setIsDataLoaded(true);
       };
 
       fetchAluno();
+    } else {
+      setIsDataLoaded(true); // Para garantir que o cálculo da mensalidade funcione durante o cadastro
     }
   }, [id, isEditMode]);
 
   useEffect(() => {
-    atualizarMensalidade();
-  }, [selectedModalidades, desconto]);
+    if (isDataLoaded) {
+      atualizarMensalidade();
+    }
+  }, [selectedModalidades, desconto, isDataLoaded]);
 
   const atualizarMensalidade = () => {
     const totalMensalidade = calcularTotalMensalidade();
@@ -85,14 +126,7 @@ export function AlunoForm() {
   const calcularTotalMensalidade = () => {
     return selectedModalidades.reduce((total, option) => {
       const modalidade = modalidades.find((m) => m.value === option.value);
-      return (
-        total +
-        (modalidade
-          ? parseFloat(
-              modalidade.mensalidade.replace(".", "").replace(",", ".")
-            )
-          : 0)
-      );
+      return total + (modalidade ? parseFloat(modalidade.value) : 0);
     }, 0);
   };
 
@@ -110,7 +144,9 @@ export function AlunoForm() {
 
   const handleModalidadeChange = (selectedOptions) => {
     setSelectedModalidades(selectedOptions);
-    atualizarMensalidade();
+    if (isDataLoaded) {
+      atualizarMensalidade();
+    }
   };
 
   const handleMaiorDeIdadeChange = (selectedOption) => {
@@ -236,8 +272,8 @@ export function AlunoForm() {
       cpf,
       modalidades: selectedModalidades,
       mensalidade,
-      maiorDeIdade, // Valor booleano para o banco de dados
-      timestamp: new Date(),
+      maiorDeIdade,
+      timestamp: new Date(), // Adiciona o timestamp atual
     };
 
     try {
@@ -249,6 +285,7 @@ export function AlunoForm() {
       setCpfError("");
       setSelectedModalidades([]);
       setMensalidade("");
+      setDesconto("");
       setFormData({
         nomeCompleto: "",
         responsavel: "",
@@ -267,7 +304,7 @@ export function AlunoForm() {
     }
   };
 
-  const atualizarAluno = async () => {
+  const editarAluno = async () => {
     if (!validarCampos()) return;
 
     const alunoData = {
@@ -275,15 +312,15 @@ export function AlunoForm() {
       cpf,
       modalidades: selectedModalidades,
       mensalidade,
-      maiorDeIdade, // Valor booleano para o banco de dados
-      timestamp: new Date(),
+      desconto,
+      maiorDeIdade,
     };
 
     try {
-      const alunoDoc = doc(bancoDeDados, "alunos", id);
-      await updateDoc(alunoDoc, alunoData);
+      const alunoDocRef = doc(bancoDeDados, "alunos", id);
+      await updateDoc(alunoDocRef, alunoData);
       toast.success("Aluno atualizado com sucesso!");
-      navigate("/alunos");
+      navigate("/listagem");
     } catch (error) {
       console.error("Erro ao atualizar aluno: ", error);
       toast.error("Erro ao atualizar aluno. Tente novamente.");
@@ -292,12 +329,13 @@ export function AlunoForm() {
 
   return (
     <div className="fundoPadrao">
-      <ToastContainer autoClose={500} pauseOnHover draggable />
+      <ToastContainer autoClose={500} />
       <Titulo
         voltarPagina={true}
+        link={"/alunos"}
         titulo={isEditMode ? "Editar aluno" : "Novo aluno"}
         botao={isEditMode ? "Atualizar" : "Cadastrar"}
-        click={isEditMode ? atualizarAluno : cadastrarAluno}
+        click={isEditMode ? editarAluno : cadastrarAluno}
       />
 
       <div className="cardPadrao">

@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export function Titulo({ titulo, botao, click, voltarPagina }) {
+export function Titulo({ titulo, botao, click, voltarPagina, link }) {
   const navigate = useNavigate();
 
   const voltar = () => {
-    navigate("/alunos");
+    navigate(link);
   };
 
   return (

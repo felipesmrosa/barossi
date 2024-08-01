@@ -11,7 +11,7 @@ export const customStyles = {
     "&:hover": {
       borderColor: "#borda-card",
     },
-    color: "#000"
+    color: "#000",
   }),
   valueContainer: (provided, state) => ({
     ...provided,
@@ -25,10 +25,10 @@ export const customStyles = {
   option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected
-    ? "#0052CC"
-    : state.isFocused
-    ? "#E3E3E3"
-    : "white",
+      ? "#0052CC"
+      : state.isFocused
+      ? "#E3E3E3"
+      : "white",
     color: state.isSelected ? "white" : "black",
     "&:hover": {
       backgroundColor: "#E3E3E3",
@@ -53,12 +53,18 @@ export const customStyles = {
 };
 
 export const modalidades = [
-  { value: "pilates", label: "Pilates", mensalidade: "200,00" },
+  { value: "pilates", label: "3x Pilates", mensalidade: "200,00" },
+  { value: "pilates", label: "2x Pilates", mensalidade: "150,00" },
+  { value: "karate", label: "3x Karate", mensalidade: "150,00" },
+  { value: "karate", label: "2x Karate", mensalidade: "130,00" },
   { value: "taekwondo", label: "Taekwondo", mensalidade: "130,00" },
   { value: "boxeChines", label: "Boxe Chinês", mensalidade: "100,00" },
   { value: "kungFu", label: "Kung Fu", mensalidade: "160,00" },
-  { value: "ginasticaRitmica", label: "Ginastica Ritmica", mensalidade: "180,00" },
-  { value: "karate", label: "Karate", mensalidade: "150,00" },
+  {
+    value: "ginasticaRitmica",
+    label: "Ginastica Ritmica",
+    mensalidade: "180,00",
+  },
   { value: "jiuJitsu", label: "Jiu-Jítsu", mensalidade: "95,00" },
 ];
 

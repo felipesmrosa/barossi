@@ -107,6 +107,22 @@
           font-weight: 600;
           text-transform: uppercase;
           border-bottom: 1px solid $cinza;
+          padding-bottom: 12px;
+
+          p {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          &--adicionar {
+            background: $amarelo;
+            border: none;
+            border-radius: 28px;
+            padding: 6px 16px;
+            font-size: 14px;
+            color: $cinza;
+            text-transform: uppercase;
+          }
         }
 
         #separacao {

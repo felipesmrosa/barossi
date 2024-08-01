@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
 import { useNavigate } from "react-router-dom";
-import { bancoDeDados } from "../../../firebase";
+import { bancoDeDados } from "@/firebase.js";
 import {
   collection,
   getDocs,
@@ -19,16 +19,17 @@ import {
   query,
   limit,
   startAfter,
+  getDoc,
 } from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
 import { Loading } from "@/Componentes/Loading/Index";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "@/Componentes/Modal/ConfirmarDelete";
-import { modalidades } from "@/utils/data"; // Importa as modalidades
 
 export function Alunos() {
   const alunosBD = collection(bancoDeDados, "alunos");
   const [alunos, setAlunos] = useState([]);
+  const [modalidades, setModalidades] = useState([]); // Estado para armazenar as modalidades
   const [loading, setLoading] = useState(true);
   const [lastVisible, setLastVisible] = useState(null);
   const [hasMore, setHasMore] = useState(true);
@@ -59,7 +60,28 @@ export function Alunos() {
       }
     };
 
+    const fetchModalidades = async () => {
+      try {
+        const docRef = doc(
+          bancoDeDados,
+          "tabelavirtual",
+          "V1g0AZ0EV0ZjLwViOYWb"
+        );
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setModalidades(data.itens); // Presumindo que 'itens' seja o array de modalidades
+        } else {
+          console.error("Documento não encontrado!");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar modalidades: ", error);
+      }
+    };
+
     fetchAlunos();
+    fetchModalidades();
   }, []);
 
   const loadMore = async () => {
@@ -139,7 +161,7 @@ export function Alunos() {
 
   return (
     <div className="fundoPadrao">
-      <ToastContainer autoClose={500} pauseOnHover draggable />
+      <ToastContainer autoClose={500} />
       <Titulo
         voltarPagina={false}
         click={() => navigate("/aluno/cadastrar")}
@@ -159,8 +181,8 @@ export function Alunos() {
         <select value={selectedModalidade} onChange={handleModalidadeChange}>
           <option value="">Todas Modalidades</option>
           {modalidades.map((modalidade) => (
-            <option key={modalidade.value} value={modalidade.label}>
-              {modalidade.label}
+            <option key={modalidade.id} value={modalidade.coluna}>
+              {modalidade.coluna}
             </option>
           ))}
         </select>

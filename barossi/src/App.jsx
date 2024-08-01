@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import { AlunoForm } from "./Paginas/Alunos/AlunoForm/Index";
 import PrivateRoute from "./RotaPrivada/Index";
 import AuthListener from "./utils/Autenticador";
+import { TabelaVirtual } from "./Paginas/TabelaVirtual/Index";
+import { TabelaForm } from "./Paginas/TabelaVirtual/TabelaForm/Index";
 
 export function App() {
   return (
@@ -31,6 +33,18 @@ export function App() {
           <Route
             path="/aluno/editar/:id"
             element={<PrivateRoute element={AlunoForm} />}
+          />
+          <Route
+            path="/tabela-virtual"
+            element={<PrivateRoute element={TabelaVirtual} />}
+          />
+          <Route
+            path="/tabela-virtual/adicionar"
+            element={<PrivateRoute element={TabelaForm} />}
+          />
+          <Route
+            path="/tabela-virtual/editar/:id"
+            element={<PrivateRoute element={TabelaForm} />}
           />
         </Route>
       </Routes>
