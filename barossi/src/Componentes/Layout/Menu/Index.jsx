@@ -49,14 +49,20 @@ export function Menu({ isOpen, abrirFechar }) {
             Alunos
           </li>
           <li
-            onClick={() => redirecionador("/tabela-virtual", 2)}
+            onClick={() => redirecionador("/financeiro", 2)}
             className={clickedItem === 2 ? "clicked" : ""}
+          >
+            Financeiro
+          </li>
+          <li
+            onClick={() => redirecionador("/tabela-virtual", 3)}
+            className={clickedItem === 3 ? "clicked" : ""}
           >
             Tabela Virtual
           </li>
           <li
             onClick={handleLogout}
-            className={clickedItem === 3 ? "clicked" : ""}
+            className={clickedItem === 4 ? "clicked" : ""}
           >
             Deslogar
           </li>

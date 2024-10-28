@@ -11,12 +11,13 @@ import PrivateRoute from "./RotaPrivada/Index";
 import AuthListener from "./utils/Autenticador";
 import { TabelaVirtual } from "./Paginas/TabelaVirtual/Index";
 import { TabelaForm } from "./Paginas/TabelaVirtual/TabelaForm/Index";
+import { Financeiro } from "./Paginas/Financeiro/Index";
 
 export function App() {
   return (
     <>
       <AuthListener />
-      <ToastContainer autoClose={500} draggable />
+      <ToastContainer autoClose={500} />
       <Routes>
         <Route path="*" element={<PaginaDeErro />} />
         <Route path="/" element={<Login />} />
@@ -33,6 +34,10 @@ export function App() {
           <Route
             path="/aluno/editar/:id"
             element={<PrivateRoute element={AlunoForm} />}
+          />
+          <Route
+            path="/financeiro"
+            element={<PrivateRoute element={Financeiro} />}
           />
           <Route
             path="/tabela-virtual"
