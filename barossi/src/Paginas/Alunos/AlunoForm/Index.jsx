@@ -47,8 +47,6 @@ export function AlunoForm() {
 
   const [modalidades, setModalidades] = useState([]);
 
-  console.log("modalidades:", modalidades);
-
   useEffect(() => {
     const fetchModalidades = async () => {
       try {
@@ -273,6 +271,7 @@ export function AlunoForm() {
       modalidades: selectedModalidades,
       mensalidade,
       maiorDeIdade,
+      statusPagamento: "pendente",
       timestamp: new Date(), // Adiciona o timestamp atual
     };
 

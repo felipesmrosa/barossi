@@ -111,7 +111,7 @@ export function Financeiro() {
             </div>
           ))}
           <div className="precoGeral">
-            <h4>Preço Geral: R$ {precoGeral.toFixed(2)}</h4>
+            <h3>TOTAL: R$ {precoGeral.toFixed(2)}</h3>
           </div>
         </div>
       )}

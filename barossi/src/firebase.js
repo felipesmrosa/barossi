@@ -33,3 +33,4 @@ const auth = getAuth(app);
 
 // Exporte a instância de autenticação
 export { auth };
+
