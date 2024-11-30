@@ -71,7 +71,7 @@ export function Financeiro() {
       <ToastContainer autoClose={500} />
       <Titulo
         voltarPagina={false}
-        click={() => navigate("/aluno/cadastrar")}
+        click={() => navigate("/financeiro/controlar")}
         titulo={"Financeiro"}
         botao={"Controlar"}
       />

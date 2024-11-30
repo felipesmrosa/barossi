@@ -76,7 +76,7 @@ export function Alunos() {
           console.error("Documento não encontrado!");
         }
       } catch (error) {
-        console.error("Erro ao buscar modalidades: ", error);
+        toast.error("Erro ao buscar modalidades");
       }
     };
 
@@ -105,7 +105,6 @@ export function Alunos() {
       setLastVisible(data.docs[data.docs.length - 1]);
       setHasMore(data.docs.length === 3);
     } catch (error) {
-      console.error("Erro ao buscar mais alunos: ", error);
       toast.error("Erro ao buscar mais alunos. Tente novamente.");
     } finally {
       setLoading(false);

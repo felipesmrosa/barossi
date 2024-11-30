@@ -12,6 +12,7 @@ import AuthListener from "./utils/Autenticador";
 import { TabelaVirtual } from "./Paginas/TabelaVirtual/Index";
 import { TabelaForm } from "./Paginas/TabelaVirtual/TabelaForm/Index";
 import { Financeiro } from "./Paginas/Financeiro/Index";
+import { FinanceiroForm } from "./Paginas/Financeiro/FinanceiroForm/Index";
 
 export function App() {
   return (
@@ -38,6 +39,10 @@ export function App() {
           <Route
             path="/financeiro"
             element={<PrivateRoute element={Financeiro} />}
+          />
+          <Route
+            path="/financeiro/controlar"
+            element={<PrivateRoute element={FinanceiroForm} />}
           />
           <Route
             path="/tabela-virtual"

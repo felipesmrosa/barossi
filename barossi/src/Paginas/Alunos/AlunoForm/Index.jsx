@@ -271,7 +271,8 @@ export function AlunoForm() {
       modalidades: selectedModalidades,
       mensalidade,
       maiorDeIdade,
-      statusPagamento: "pendente",
+      mensalidadeStatus: "pendente", // Status inicial
+      ultimoPagamento: null, // Nenhum pagamento registrado
       timestamp: new Date(), // Adiciona o timestamp atual
     };
 
@@ -313,6 +314,8 @@ export function AlunoForm() {
       mensalidade,
       desconto,
       maiorDeIdade,
+      mensalidadeStatus: "pendente", // Opcional, caso queira atualizar no modo de edição
+      ultimoPagamento: null, // Opcional, caso queira atualizar no modo de edição
     };
 
     try {

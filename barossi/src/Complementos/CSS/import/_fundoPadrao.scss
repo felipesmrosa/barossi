@@ -45,20 +45,30 @@
     font-size: 48px;
     color: $cinza;
   }
+
   .cardPadrao {
     width: 100%;
 
     &__card {
       border-radius: 6px;
       border: 1px solid $borda-card;
-      padding: 22px 14px 14px 14px;
+      padding: 10px;
       margin: 8px 0;
       display: flex;
       align-items: flex-start;
       justify-content: center;
       flex-direction: column;
-      gap: 12px;
+      gap: 6px;
       position: relative;
+
+      &__marcarComoPago {
+        background-color: transparent;
+        border: none;
+
+        svg {
+          color: $verde;
+        }
+      }
 
       &__acoes {
         display: flex;
@@ -68,7 +78,7 @@
         font-size: 18px;
         position: absolute;
         right: 6px;
-        top: 6px;
+        bottom: 6px;
 
         &--edit {
           color: $azul;
@@ -86,6 +96,7 @@
       &__informacaoAdicional {
         font-size: 14px;
         text-decoration: none;
+        text-transform: capitalize;
 
         svg {
           color: $verde;
