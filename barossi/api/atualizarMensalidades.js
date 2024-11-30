@@ -1,23 +1,14 @@
-// api/atualizarMensalidades.js
-import { initializeApp, firestore } from 'firebase-admin';
-import Cors from 'cors';
+// api/updateMensalidades.js
 
-// Inicializa o Firebase Admin SDK
+import { initializeApp, firestore } from "firebase-admin";
 initializeApp();
 
-// Inicializa o middleware CORS
-const cors = Cors({
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  origin: '*' // Permitir qualquer origem (alterar conforme necessário para segurança)
-});
-
 export default async (req, res) => {
-  // Habilita o CORS
-  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve(result))));
-
   try {
-    // Acessa a coleção 'Alunos' no Firestore
-    const alunosRef = firestore().collection('Alunos');
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    const alunosRef = firestore().collection("Alunos");
     const snapshot = await alunosRef.get();
 
     const batch = firestore().batch();
@@ -25,17 +16,17 @@ export default async (req, res) => {
     snapshot.forEach((doc) => {
       const aluno = doc.data();
       const statusAtual = aluno.mensalidadeStatus;
-      if (statusAtual === 'Pago') {
-        batch.update(doc.ref, { mensalidadeStatus: 'Pendente' });
+      if (statusAtual === "Pago") {
+        batch.update(doc.ref, { mensalidadeStatus: "Pendente" });
       } else {
-        batch.update(doc.ref, { mensalidadeStatus: 'Atrasado' });
+        batch.update(doc.ref, { mensalidadeStatus: "Atrasado" });
       }
     });
 
     await batch.commit();
-    res.status(200).json({ message: 'Mensalidades atualizadas com sucesso!' });
+    res.status(200).json({ message: "Mensalidades atualizadas com sucesso!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro ao atualizar mensalidades.' });
+    console.error("Erro ao atualizar mensalidades:", error);
+    res.status(500).json({ error: "Erro ao atualizar mensalidades." });
   }
 };
