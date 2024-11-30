@@ -1,9 +1,22 @@
-// api/updateMensalidades.js
+// api/atualizarMensalidades.js
 import { initializeApp, firestore } from 'firebase-admin';
+import Cors from 'cors';
+
+// Inicializa o Firebase Admin SDK
 initializeApp();
 
+// Inicializa o middleware CORS
+const cors = Cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: '*' // Permitir qualquer origem (alterar conforme necessário para segurança)
+});
+
 export default async (req, res) => {
+  // Habilita o CORS
+  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve(result))));
+
   try {
+    // Acessa a coleção 'Alunos' no Firestore
     const alunosRef = firestore().collection('Alunos');
     const snapshot = await alunosRef.get();
 

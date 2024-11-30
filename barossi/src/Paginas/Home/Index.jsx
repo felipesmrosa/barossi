@@ -52,19 +52,19 @@ export function Login() {
         localStorage.removeItem("lembrarme");
       }
 
-      // Após o login, chama a API para atualizar as mensalidades
-      await fetch("https://academia-barossi.vercel.app/api/atualizarMensalidades", {
-        method: "GET", // Ou POST, dependendo da sua API
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Mensalidades atualizadas:", data);
-        })
-        .catch((error) => {
-          console.error("Erro ao atualizar mensalidades:", error);
-        });
-
       navigate("/dashboard");
+
+      // Chamar a API para atualizar as mensalidades
+      const response = await fetch(
+        "https://academia-barossi.vercel.app/api/atualizarMensalidades"
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar as mensalidades");
+      }
+
+      const data = await response.json();
+      console.log("Resposta da API:", data.message);
     } catch (error) {
       console.error("Erro ao fazer login:", error);
     }
