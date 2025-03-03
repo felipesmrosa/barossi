@@ -93,6 +93,7 @@
         text-transform: uppercase;
         font-size: 16px;
       }
+
       &__informacaoAdicional {
         font-size: 14px;
         text-decoration: none;
@@ -124,6 +125,7 @@
             align-items: center;
             justify-content: space-between;
           }
+
           &--adicionar {
             background: $amarelo;
             border: none;
@@ -206,7 +208,8 @@
     gap: 12px;
 
     &__aluno {
-      flex: 1 1 calc(50% - 1rem); /* 50% da largura, com gap ajustado */
+      flex: 1 1 calc(50% - 1rem);
+      /* 50% da largura, com gap ajustado */
       text-align: left;
       font-size: 1rem;
 
@@ -223,20 +226,48 @@
 
       &__content {
         max-height: 0;
+        opacity: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease;
+        // transform: scaleY(0);
+        transition: all 0.1s ease-in-out;
+        transform-origin: top;
         color: $amarelo;
 
         &.open {
-          max-height: 100vh;
+          max-height: 500px; // Defina um valor suficientemente grande para acomodar os elementos
+          opacity: 1;
+          // transform: scaleY(1); // Isso ajuda a fazer a transição de altura de forma mais suave
           background-color: $branco;
           padding: 12px;
-
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
+
+          .status {
+            transition: all 0.1s ease-in-out;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 0;
+          }
+
+          .status.pago {
+            background-color: #4CAF50;
+            /* Verde */
+            transition: all 0.1s ease-in-out;
+            color: #333;
+          }
+          
+          .status.pendente {
+            background-color: #FFC107;
+            /* Amarelo */
+            transition: all 0.1s ease-in-out;
+            color: #333;
+          }
         }
       }
+
 
       &--title {
         text-transform: uppercase;

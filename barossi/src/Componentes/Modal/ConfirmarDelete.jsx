@@ -1,12 +1,12 @@
 import React from "react";
 
-const Modal = ({ isOpen, onClose, onConfirm, message }) => {
+const Modal = ({ isOpen, onClose, onConfirm, message, title }) => {
   if (!isOpen) return null;
 
   return (
     <div className="modal">
       <div className="modal-content">
-        <h2>Confirmar Exclusão</h2>
+        <h2>{title}</h2>
         <p>{message}</p>
         <div className="modal-buttons">
           <button onClick={onConfirm} className="confirm-button">

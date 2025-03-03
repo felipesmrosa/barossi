@@ -7,36 +7,80 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { bancoDeDados } from "@/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { Loading } from "@/Componentes/Loading/Index";
+import ExportarModal from "./ExportarModal/Index";
+
+const getCurrentYear = () => new Date().getFullYear();
 
 const buscarAlunosPorModalidade = async () => {
   const modalidades = {};
+  let totalPago = 0;
+  let totalPendente = 0;
+  const anoAtual = getCurrentYear();
+  const meses = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+  ];
+  const mesAtual = meses[new Date().getMonth()];
+
   try {
     const snapshot = await getDocs(collection(bancoDeDados, "alunos"));
     snapshot.forEach((doc) => {
       const aluno = doc.data();
+      let mensalidades = aluno.mensalidades || {};
+      const mensalidadeAtual = mensalidades[anoAtual]?.[mesAtual] || "pendente";
+
       aluno.modalidades.forEach((modalidade) => {
-        const nomeModalidade = modalidade.label;
+        let nomeModalidade = modalidade.label;
+
+        const nomesPadronizados = {
+          "pilates": "Pilates", "karatê": "Karatê", "judô": "Judô",
+          "taekwondo": "Taekwondo", "ginastica ritmica": "Ginastica",
+          "jiu-jítsu": "Jiu-Jítsu", "boxe chinês": "Boxe Chinês", "kung fu": "Kung Fu"
+        };
+
+        Object.keys(nomesPadronizados).forEach((chave) => {
+          if (nomeModalidade.toLowerCase().includes(chave)) {
+            nomeModalidade = nomesPadronizados[chave];
+          }
+        });
+
         const valorModalidade = Number(modalidade.value);
+        if (mensalidadeAtual.toLowerCase() === "pago") {
+          totalPago += valorModalidade;
+        } else {
+          totalPendente += valorModalidade;
+        }
+
         if (!modalidades[nomeModalidade]) {
           modalidades[nomeModalidade] = {
             nome: nomeModalidade,
-            preco: valorModalidade,
-            alunos: [],
+            precoTotal: 0,
+            alunos: new Set(),
+            statusAlunos: {},
           };
         }
-        modalidades[nomeModalidade].alunos.push(aluno.nomeCompleto);
+
+        modalidades[nomeModalidade].precoTotal += valorModalidade;
+        modalidades[nomeModalidade].alunos.add(aluno.nomeCompleto);
+        modalidades[nomeModalidade].statusAlunos[aluno.nomeCompleto] = mensalidadeAtual;
       });
     });
 
-    Object.values(modalidades).forEach((modalidade) => {
-      modalidade.totalAlunos = modalidade.alunos.length;
-      modalidade.precoTotal = modalidade.totalAlunos * modalidade.preco;
-    });
-
-    return Object.values(modalidades);
+    return {
+      modalidades: Object.values(modalidades).map((modalidade) => ({
+        ...modalidade,
+        totalAlunos: modalidade.alunos.size,
+        alunosFormatados: Array.from(modalidade.alunos).map((aluno) => ({
+          nome: aluno,
+          status: modalidade.statusAlunos[aluno] || "pendente"
+        })).sort((a, b) => (a.status === "pago" ? -1 : 1)),
+      })),
+      totalPago,
+      totalPendente,
+    };
   } catch (error) {
     console.error("Erro ao buscar alunos: ", error);
-    return [];
+    return { modalidades: [], totalPago: 0, totalPendente: 0 };
   }
 };
 
@@ -44,19 +88,20 @@ export function Financeiro() {
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
   const [modalidades, setModalidades] = useState([]);
-  const [precoGeral, setPrecoGeral] = useState(0);
+  const [totalPago, setTotalPago] = useState(0);
+  const [totalPendente, setTotalPendente] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
+
+  const abrirModal = () => setModal(true);
+  const fecharModal = () => setModal(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      const data = await buscarAlunosPorModalidade();
-      setModalidades(data);
-      const total = data.reduce(
-        (acc, modalidade) => acc + modalidade.precoTotal,
-        0
-      );
-      setPrecoGeral(total);
+      const { modalidades, totalPago, totalPendente } = await buscarAlunosPorModalidade();
+      setModalidades(modalidades);
+      setTotalPago(totalPago);
+      setTotalPendente(totalPendente);
       setLoading(false);
     };
     fetchData();
@@ -82,37 +127,27 @@ export function Financeiro() {
         <div className="modalidades">
           {modalidades.map((modalidade, index) => (
             <div key={index} className="modalidades__modalidade">
-              <h4
-                className="modalidades__modalidade--title"
-                onClick={() => toggleOpen(index)}
-              >
-                {modalidade.nome} | R$ {modalidade.precoTotal.toFixed(2)}
-                <FontAwesomeIcon
-                  size="lg"
-                  icon={openIndex === index ? faChevronUp : faChevronDown}
-                />
+              <h4 className="modalidades__modalidade--title" onClick={() => toggleOpen(index)}>
+                {modalidade.nome} | {modalidade.totalAlunos} aluno{modalidade.totalAlunos > 1 ? "s" : ""} |
+                R$ {modalidade.precoTotal.toFixed(2)}
+                <FontAwesomeIcon size="lg" icon={openIndex === index ? faChevronUp : faChevronDown} />
               </h4>
-              <div
-                className={`modalidades__modalidade__content ${
-                  openIndex === index ? "open" : ""
-                }`}
-                style={{
-                  maxHeight: openIndex === index ? "100vh" : "0",
-                  overflow: "hidden",
-                  transition: "max-height 0.3s ease",
-                }}
-              >
-                {modalidade.alunos.map((aluno, alunoIndex) => (
-                  <div key={alunoIndex} className="modalidades__aluno">
-                    <p>• {aluno}</p>
-                  </div>
+              <div className={`modalidades__modalidade__content ${openIndex === index ? "open" : ""}`}>
+                {modalidade.alunosFormatados.map((aluno, idx) => (
+                  <p key={idx} className={`status ${aluno.status.toLowerCase()}`}>{aluno.nome}</p>
                 ))}
               </div>
+
             </div>
           ))}
           <div className="precoGeral">
-            <h3>TOTAL: R$ {precoGeral.toFixed(2)}</h3>
+            <h3>TOTAL PENDENTE: R$ {totalPendente.toFixed(2)}</h3>
+            <h3>TOTAL PAGO: R$ {totalPago.toFixed(2)}</h3>
           </div>
+          <button onClick={abrirModal}>EXPORTAR RELATÓRIO</button>
+          {modal && (
+            <ExportarModal fecharModal={fecharModal} />
+          )}
         </div>
       )}
     </div>

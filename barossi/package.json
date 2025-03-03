@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "firebase": "^10.12.4",
     "firebase-admin": "^13.0.1",
+    "jspdf": "^3.0.0",
     "node-cron": "^3.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,7 +31,8 @@
     "react-router-dom": "^6.24.1",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
-    "sass": "^1.77.6"
+    "sass": "^1.77.6",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.7",

@@ -271,8 +271,64 @@ export function AlunoForm() {
       modalidades: selectedModalidades,
       mensalidade,
       maiorDeIdade,
-      mensalidadeStatus: "pendente", // Status inicial
-      ultimoPagamento: null, // Nenhum pagamento registrado
+      mensalidades: {
+        2025: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        },
+        2026: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        },
+        2027: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        },
+        2028: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        }
+      },
       timestamp: new Date(), // Adiciona o timestamp atual
     };
 
@@ -314,15 +370,13 @@ export function AlunoForm() {
       mensalidade,
       desconto,
       maiorDeIdade,
-      mensalidadeStatus: "pendente", // Opcional, caso queira atualizar no modo de edição
-      ultimoPagamento: null, // Opcional, caso queira atualizar no modo de edição
     };
 
     try {
       const alunoDocRef = doc(bancoDeDados, "alunos", id);
       await updateDoc(alunoDocRef, alunoData);
       toast.success("Aluno atualizado com sucesso!");
-      navigate("/listagem");
+      navigate("/alunos");
     } catch (error) {
       console.error("Erro ao atualizar aluno: ", error);
       toast.error("Erro ao atualizar aluno. Tente novamente.");
@@ -331,7 +385,7 @@ export function AlunoForm() {
 
   return (
     <div className="fundoPadrao">
-      <ToastContainer autoClose={500} />
+      <ToastContainer autoClose={2000} />
       <Titulo
         voltarPagina={true}
         link={"/alunos"}

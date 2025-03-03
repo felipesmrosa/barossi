@@ -247,6 +247,7 @@ export function Alunos() {
 
       <Modal
         isOpen={isModalOpen}
+        title="Confirmar Exclusão"
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => selectedAluno && handleDelete(selectedAluno)}
         message="Você tem certeza que deseja excluir este aluno?"
