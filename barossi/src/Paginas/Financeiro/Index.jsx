@@ -8,7 +8,6 @@ import { bancoDeDados } from "@/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { Loading } from "@/Componentes/Loading/Index";
 import ExportarModal from "./ExportarModal/Index";
-import GerarBoleto from "@/utils/gerarBoleto";
 
 const getCurrentYear = () => new Date().getFullYear();
 
@@ -150,8 +149,6 @@ export function Financeiro() {
       {modal && (
         <ExportarModal fecharModal={fecharModal} />
       )}
-
-      <GerarBoleto />
     </div>
   );
 }
