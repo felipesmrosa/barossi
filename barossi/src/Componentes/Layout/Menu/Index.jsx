@@ -1,13 +1,14 @@
-import { getAuth, signOut } from "firebase/auth";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
-export function Menu({ isOpen, abrirFechar }) {
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+export function Menu() {
   const navigate = useNavigate();
   const [clickedItem, setClickedItem] = useState(null);
 
   const redirecionador = (path, index) => {
-    abrirFechar();
     navigate(path);
     setClickedItem(index);
     setTimeout(() => setClickedItem(null), 300);
@@ -33,41 +34,36 @@ export function Menu({ isOpen, abrirFechar }) {
   };
 
   return (
-    <div className={`menu ${isOpen ? "open" : ""}`}>
-      <div className="links">
-        <ul className="links__lista">
-          <li
-            onClick={() => redirecionador("/dashboard", 0)}
-            className={clickedItem === 0 ? "clicked" : ""}
-          >
-            Inicio
-          </li>
-          <li
-            onClick={() => redirecionador("/alunos", 1)}
-            className={clickedItem === 1 ? "clicked" : ""}
-          >
-            Alunos
-          </li>
-          <li
-            onClick={() => redirecionador("/financeiro", 2)}
-            className={clickedItem === 2 ? "clicked" : ""}
-          >
-            Financeiro
-          </li>
-          <li
-            onClick={() => redirecionador("/tabela-virtual", 3)}
-            className={clickedItem === 3 ? "clicked" : ""}
-          >
-            Tabela Virtual
-          </li>
-          <li
-            onClick={handleLogout}
-            className={clickedItem === 4 ? "clicked" : ""}
-          >
-            Deslogar
-          </li>
-        </ul>
-      </div>
-    </div>
+    <aside className="sidebar">
+      <ul className="sidebar__links">
+        <li
+          onClick={() => redirecionador("/dashboard", 0)}
+          className={clickedItem === 0 ? "active" : ""}
+        >
+          Início
+        </li>
+        <li
+          onClick={() => redirecionador("/alunos", 1)}
+          className={clickedItem === 1 ? "active" : ""}
+        >
+          Alunos
+        </li>
+        <li
+          onClick={() => redirecionador("/financeiro", 2)}
+          className={clickedItem === 2 ? "active" : ""}
+        >
+          Financeiro
+        </li>
+        <li
+          onClick={() => redirecionador("/tabela-virtual", 3)}
+          className={clickedItem === 3 ? "active" : ""}
+        >
+          Tabela Virtual
+        </li>
+        <li onClick={handleLogout} className="logout">
+          Deslogar
+        </li>
+      </ul>
+    </aside>
   );
 }

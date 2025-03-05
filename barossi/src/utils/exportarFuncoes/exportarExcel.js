@@ -30,6 +30,7 @@ const gerarDadosExportados = (alunos, alunoSelecionado, anoSelecionado) => {
             ID: aluno.id,
             Aluno: aluno.nome,
             CPF: aluno.cpf,
+            Ano: anoSelecionado,
             "Valor Mensalidade": aluno.valorMensalidade || "Não especificado",
             ...mensalidadesSeparadas,  // Espalha as mensalidades separadas por mês
         };

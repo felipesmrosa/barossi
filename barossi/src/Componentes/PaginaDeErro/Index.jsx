@@ -9,9 +9,12 @@ export function PaginaDeErro() {
   };
 
   return (
-    <div>
-      <h1> PaginaDeErro </h1>
-      <button onClick={voltarPagina}>Voltar</button>
+    <div className="erro">
+      <span>
+        <h1>ERRO</h1>
+        <h1 id="erro404">404</h1>
+      </span>
+      <button className="return" onClick={voltarPagina}>Voltar</button>
     </div>
   );
 }

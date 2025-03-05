@@ -1,6 +1,10 @@
 {
-    "rewrites": [
-      { "source": "/(.*)", "destination": "/" }
-    ]
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/**/*.php": {
+      "runtime": "vercel-php@1.0.0"
+    }
   }
-  
+}

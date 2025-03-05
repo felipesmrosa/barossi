@@ -173,7 +173,6 @@ export function TabelaForm() {
             {items.map((item, index) => (
               <div
                 key={index}
-                style={{ width: "91%" }}
                 className="cardPadrao__card"
               >
                 <p className="cardPadrao__card__informacaoPrincipal">

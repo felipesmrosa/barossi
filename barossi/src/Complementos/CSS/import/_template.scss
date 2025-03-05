@@ -1,117 +1,222 @@
-.main {
-  height: auto;
+/* Layout Principal */
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 70px 1fr;
+  grid-template-areas:
+    "cabecalho cabecalho"
+    "sidebar conteudo";
+  height: 100vh;
+}
 
-  .cabecalho {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Cabeçalho */
+.cabecalho {
+  grid-area: cabecalho;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  background: $cinza;
+  color: $branco;
+
+  &__notification {
     position: relative;
-    height: 70px;
-    background: $gradient_Cinza;
+    display: inline-block;
 
-    &__menu {
-      position: absolute;
-      left: 21px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 25px;
-      height: 20px;
-      cursor: pointer;
-      z-index: 1000; // Para garantir que o botão esteja acima do menu
-
-      span {
-        display: block;
-        width: 100%;
-        height: 3px;
-        border-radius: 28px;
-        background-color: $amarelo;
-        transition: transform 0.3s, opacity 0.3s;
-      }
-
-      &.open span:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
-      }
-
-      &.open span:nth-child(2) {
-        opacity: 0;
-      }
-
-      &.open span:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
-      }
-    }
-
-    &__logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &--logo {
-        width: 6vh;
-      }
-    }
-
-    &__user {
-      position: absolute;
-      right: 21px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 25px;
-      height: 20px;
+    &--icon {
       cursor: pointer;
 
       svg {
         color: $amarelo;
       }
     }
+
   }
-  .menu {
-    position: fixed;
-    top: 0;
-    left: -100%;
+
+  img {
     width: 100%;
-    height: 100%;
-    background: $gradient_Cinza;
-    color: $branco;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 80px 0;
-    transition: left 0.3s ease-in-out;
-    z-index: 99;
+    max-width: 3%;
+  }
+}
 
-    &.open {
-      left: 0;
+.notification-menu {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  background: $gradient_Cinza;
+  color: white;
+  padding: 10px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+
+  .notification-item {
+    padding: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #444;
     }
+  }
+}
 
-    .links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: $branco;
+  cursor: pointer;
+
+  span {
+    width: 30px;
+    height: 4px;
+    background-color: $amarelo;
+    display: block;
+    margin: 0px 0px 6px 0px;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  grid-area: sidebar;
+  background: $gradient_Cinza;
+  color: $branco;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  svg {
+    color: $amarelo;
+    margin-right: 10px;
+  }
+}
+
+.sidebar nav {
+  flex-grow: 1;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar__logout {
+  margin-top: auto;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.sidebar__logout a {
+  display: flex;
+  align-items: center;
+  color: $branco;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.sidebar__logout a:hover {
+  background-color: $amarelo;
+  color: $cinza;
+}
+
+.sidebar nav ul li a {
+  text-decoration: none;
+  color: $branco;
+  font-size: 18px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover {
+    background-color: $amarelo;
+    color: $cinza;
+  }
+}
+
+.sidebar nav ul li a:hover {
+  background-color: $amarelo;
+  color: $cinza;
+}
+
+.sidebar nav ul li a:hover svg {
+  color: $cinza;
+  /* Adicionando essa linha para mudar a cor do ícone */
+}
+
+.sidebar__logout a:hover {
+  background-color: $amarelo;
+  color: $cinza;
+}
+
+.sidebar__logout a:hover svg {
+  color: $cinza;
+  /* Adicionando essa linha para mudar a cor do ícone no logout */
+}
+
+
+
+/* Conteúdo */
+.conteudo {
+  grid-area: conteudo;
+  padding: 30px 100px;
+  overflow-y: scroll;
+}
+
+/* Responsividade: Sidebar vira menu hambúrguer */
+@media (max-width: 1024px) {
+  .conteudo {
+    padding: 10px 20px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "cabecalho"
+      "conteudo";
+  }
+
+  /* Cabeçalho */
+  .cabecalho {
+    img {
       width: 100%;
-
-      &__lista {
-        list-style: none;
-        padding: 0;
-        text-align: center;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        flex-direction: column;
-        width: 100%;
-        gap: 12px;
-
-        li {
-          font-size: 1.5rem;
-          cursor: pointer;
-          width: 100%;
-        }
-        li.clicked {
-          background-color: $amarelo;
-        }
-      }
+      max-width: 18%;
     }
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -290px;
+    top: 70px;
+    width: 250px;
+    height: calc(100vh - 70px);
+    transform: translateX(0);
+    z-index: 9;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .menu-toggle {
+    display: block;
   }
 }

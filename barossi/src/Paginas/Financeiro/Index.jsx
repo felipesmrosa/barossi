@@ -8,6 +8,7 @@ import { bancoDeDados } from "@/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { Loading } from "@/Componentes/Loading/Index";
 import ExportarModal from "./ExportarModal/Index";
+import GerarBoleto from "@/utils/gerarBoleto";
 
 const getCurrentYear = () => new Date().getFullYear();
 
@@ -137,19 +138,20 @@ export function Financeiro() {
                   <p key={idx} className={`status ${aluno.status.toLowerCase()}`}>{aluno.nome}</p>
                 ))}
               </div>
-
             </div>
           ))}
-          <div className="precoGeral">
-            <h3>TOTAL PENDENTE: R$ {totalPendente.toFixed(2)}</h3>
-            <h3>TOTAL PAGO: R$ {totalPago.toFixed(2)}</h3>
-          </div>
-          <button onClick={abrirModal}>EXPORTAR RELATÓRIO</button>
-          {modal && (
-            <ExportarModal fecharModal={fecharModal} />
-          )}
         </div>
       )}
+      <div className="precoGeral">
+        <h3>TOTAL PENDENTE: R$ {totalPendente.toFixed(2)}</h3>
+        <h3>TOTAL PAGO: R$ {totalPago.toFixed(2)}</h3>
+      </div>
+      <button className="exportar" onClick={abrirModal}>EXPORTAR RELATÓRIO</button>
+      {modal && (
+        <ExportarModal fecharModal={fecharModal} />
+      )}
+
+      <GerarBoleto />
     </div>
   );
 }

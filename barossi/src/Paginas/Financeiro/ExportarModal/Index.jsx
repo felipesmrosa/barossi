@@ -80,44 +80,45 @@ const ExportarModal = ({ fecharModal }) => {
     };
 
     return (
+
         <div className="modal">
-            <h2>Escolher Dados para Exportação</h2>
+            <div className="modal-content">
+                <h2>Dados para Exportação</h2>
+                <div className="select--modal">
+                    <label htmlFor="aluno">Aluno:</label>
+                    <select
+                        id="aluno"
+                        value={alunoSelecionado}
+                        onChange={(e) => setAlunoSelecionado(e.target.value)}
+                    >
+                        <option value="todos">Todos</option>
+                        {alunos.map((aluno) => (
+                            <option key={aluno.id} value={aluno.id}>
+                                {aluno.nome}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <div>
-                <label htmlFor="aluno">Aluno:</label>
-                <select
-                    id="aluno"
-                    value={alunoSelecionado}
-                    onChange={(e) => setAlunoSelecionado(e.target.value)}
-                >
-                    <option value="todos">Todos</option>
-                    {alunos.map((aluno) => (
-                        <option key={aluno.id} value={aluno.id}>
-                            {aluno.nome}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <label htmlFor="ano">Ano:</label>
-                <select
-                    id="ano"
-                    value={anoSelecionado}
-                    onChange={(e) => setAnoSelecionado(e.target.value)}
-                >
-                    {anos.map((ano) => (
-                        <option key={ano} value={ano}>
-                            {ano}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="modal-buttons">
-                <button onClick={() => handleExportar("excel")}>Exportar Excel</button>
-                <button onClick={() => handleExportar("pdf")}>Exportar PDF</button>
-                <button onClick={fecharModal}>Fechar</button>
+                <div className="select--modal">
+                    <label htmlFor="ano">Ano:</label>
+                    <select
+                        id="ano"
+                        value={anoSelecionado}
+                        onChange={(e) => setAnoSelecionado(e.target.value)}
+                    >
+                        {anos.map((ano) => (
+                            <option key={ano} value={ano}>
+                                {ano}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="modal-buttons">
+                    <button className="excel-button" onClick={() => handleExportar("excel")}>Exportar Excel</button>
+                    <button className="pdf-button" onClick={() => handleExportar("pdf")}>Exportar PDF</button>
+                    <button className="close-button" onClick={fecharModal}>Fechar</button>
+                </div>
             </div>
         </div>
     );

@@ -3,7 +3,6 @@
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  padding: 15px 20px;
 
   &__carregarMais {
     width: 100%;
@@ -22,6 +21,7 @@
     justify-content: space-between;
     padding: 0px 0px 22px 0px;
     width: 100%;
+    font-size: 24px;
 
     &__tituloEIcone {
       display: flex;
@@ -34,7 +34,7 @@
       background: $amarelo;
       border: none;
       border-radius: 28px;
-      padding: 4px 16px;
+      padding: 12px 24px;
       font-size: 18px;
     }
   }
@@ -54,6 +54,7 @@
       border: 1px solid $borda-card;
       padding: 10px;
       margin: 8px 0;
+      width: 100%;
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -74,28 +75,81 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-size: 18px;
+        gap: 26px;
+        font-size: 20px;
         position: absolute;
-        right: 6px;
-        bottom: 6px;
+        right: 12px;
+        bottom: 8px;
+        cursor: pointer;
 
-        &--edit {
+        &__spanEdit {
           color: $azul;
+          font-weight: bold;
+
+          p {}
+
+          &::after {
+            content: "EDITAR";
+            display: inline-block;
+            /* Garante que o conteúdo seja exibido */
+            font-size: 12px;
+            margin-left: 5px;
+            /* Adiciona um espaço à direita, se necessário */
+          }
+
+          @media (max-width: 1024px) {
+
+            /* Remove o conteúdo "editar" em telas menores que 1024px */
+            &::after {
+              content: "";
+            }
+          }
+
+          &--edit {
+            color: $azul;
+            position: relative;
+          }
         }
 
-        &--del {
+        &__spanDel {
           color: $vermelho;
+          font-weight: bold;
+
+          &::after {
+            content: "DELETAR";
+            display: inline-block;
+            font-size: 12px;
+            /* Garante que o conteúdo seja exibido */
+            margin-left: 5px;
+            /* Adiciona um espaço à direita, se necessário */
+          }
+
+          @media (max-width: 1024px) {
+
+            /* Remove o conteúdo "editar" em telas menores que 1024px */
+            &::after {
+              content: "";
+            }
+          }
+
+          &--del {
+            color: $vermelho;
+            position: relative;
+          }
         }
+
+        &--del {}
       }
+
+
 
       &__informacaoPrincipal {
         text-transform: uppercase;
-        font-size: 16px;
+        font-size: 20px;
       }
 
       &__informacaoAdicional {
-        font-size: 14px;
+        font-size: 16px;
         text-decoration: none;
         text-transform: capitalize;
 
@@ -158,11 +212,14 @@
           input {
             background-color: transparent;
             border: 1px solid $borda-card;
-            width: 96%;
+            width: 100%;
+            /* Mudado para 100% para ocupar toda a largura */
             height: 1.8rem;
             outline: none;
             padding-left: 10px;
             font-size: 16px;
+            box-sizing: border-box;
+            /* Garantir que padding e border estão dentro do cálculo do width */
           }
         }
       }
@@ -178,10 +235,12 @@
     gap: 6px;
     margin-bottom: 10px;
 
+
     input {
       background-color: transparent;
       border: 1px solid $borda-card;
-      width: 96%;
+      width: 100%;
+      /* O input vai ocupar 100% da largura disponível da .filtro */
       height: 2.25rem;
       outline: none;
       padding-left: 10px;
@@ -192,12 +251,19 @@
     select {
       background-color: transparent;
       border: 1px solid $borda-card;
-      width: 50%;
+      width: 20%;
+      /* Ajuste para o select também ocupar 100% da largura */
       height: 1.8rem;
       outline: none;
       padding-left: 5px;
       font-size: 16px;
       border-radius: 4px;
+    }
+
+    @media (max-width: 1024px) {
+      select {
+        width: 55%;
+      }
     }
   }
 
@@ -258,7 +324,7 @@
             transition: all 0.1s ease-in-out;
             color: #333;
           }
-          
+
           .status.pendente {
             background-color: #FFC107;
             /* Amarelo */
@@ -280,5 +346,57 @@
         }
       }
     }
+
+
+  }
+
+  .precoGeral {
+    margin: 16px 0px;
+  }
+
+  button.exportar {
+    background: $amarelo;
+    border: none;
+    border-radius: 28px;
+    padding: 8px;
+    width: 100%;
+    text-transform: uppercase;
+    font-size: 16px;
+    box-shadow: 1px 2px 3px 1px #00000049;
+  }
+}
+
+.erro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 80vh;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    h1 {
+      text-transform: uppercase;
+      font-size: 48px;
+    }
+
+    #erro404 {
+      color: $verde;
+    }
+  }
+
+  .return {
+    background-color: $verde;
+    border: 2px solid $verde;
+    border-radius: 28px;
+    padding: 6px 28px;
+    color: $branco;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
   }
 }
