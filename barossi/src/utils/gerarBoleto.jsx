@@ -11,7 +11,7 @@ const GerarBoleto = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "https://academia-barossi.vercel.app/api/criar-boleto",
+        "https://academia-barossi.vercel.app/utils/criar-boleto.js",
         {
           nome: alunoSelecionado.nome,
           cpf: alunoSelecionado.cpf,
