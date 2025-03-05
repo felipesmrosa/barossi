@@ -1,13 +1,8 @@
 {
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "rewrites": [
     {
-      "source": "/financeiro",
-      "destination": "/financeiro"
+      "source": "/:path*",
+      "destination": "/"
     }
   ]
 }
