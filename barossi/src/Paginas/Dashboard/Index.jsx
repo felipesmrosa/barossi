@@ -15,6 +15,7 @@ export function Dashboard() {
       <h3>
         <FontAwesomeIcon icon={faTriangleExclamation} />
         Em Desenvolvimento.
+        teste
       </h3>
     </div>
   );
