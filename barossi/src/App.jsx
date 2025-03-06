@@ -25,36 +25,39 @@ export function App() {
         <Route element={<Layout />}>
           <Route
             path="/dashboard"
-            element={<PrivateRoute element={Dashboard} />}
+            element={<PrivateRoute element={<Dashboard />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
           />
-          <Route path="/alunos" element={<PrivateRoute element={Alunos} />} />
+          <Route
+            path="/alunos"
+            element={<PrivateRoute element={<Alunos />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
+          />
           <Route
             path="/aluno/cadastrar"
-            element={<PrivateRoute element={AlunoForm} />}
+            element={<PrivateRoute element={<AlunoForm />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
           />
           <Route
             path="/aluno/editar/:id"
-            element={<PrivateRoute element={AlunoForm} />}
+            element={<PrivateRoute element={<AlunoForm />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
           />
           <Route
             path="/financeiro"
-            element={<PrivateRoute element={Financeiro} />}
+            element={<PrivateRoute element={<Financeiro />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
           />
           <Route
             path="/financeiro/controlar"
-            element={<PrivateRoute element={FinanceiroForm} />}
+            element={<PrivateRoute element={<FinanceiroForm />} allowedRoles={["admin", "karate", "pilates", "ginastica", "taekwondo", "jiujitsu", "boxechines"]} />}
           />
           <Route
             path="/tabela-virtual"
-            element={<PrivateRoute element={TabelaVirtual} />}
+            element={<PrivateRoute element={<TabelaVirtual />} allowedRoles={["admin"]} />}
           />
           <Route
             path="/tabela-virtual/adicionar"
-            element={<PrivateRoute element={TabelaForm} />}
+            element={<PrivateRoute element={<TabelaForm />} allowedRoles={["admin"]} />}
           />
           <Route
             path="/tabela-virtual/editar/:id"
-            element={<PrivateRoute element={TabelaForm} />}
+            element={<PrivateRoute element={<TabelaForm />} allowedRoles={["admin"]} />}
           />
         </Route>
       </Routes>

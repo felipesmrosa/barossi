@@ -20,13 +20,6 @@ export function Menu() {
     try {
       await signOut(auth);
 
-      const lembrarConta = localStorage.getItem("lembrarme");
-
-      if (!lembrarConta) {
-        localStorage.removeItem("emailAutenticado");
-        localStorage.removeItem("senhaAutenticada");
-      }
-
       window.location.href = "/";
     } catch (error) {
       console.error("Erro ao fazer logout:", error);

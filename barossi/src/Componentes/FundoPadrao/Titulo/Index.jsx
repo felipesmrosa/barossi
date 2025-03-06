@@ -21,6 +21,7 @@ export function Titulo({ titulo, botao, click, voltarPagina, link }) {
       <button onClick={click} className="titulo__botao">
         {botao}
       </button>
+
     </div>
   );
 }

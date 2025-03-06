@@ -47,21 +47,41 @@ export function AlunoForm() {
 
   const [modalidades, setModalidades] = useState([]);
 
+  const role = localStorage.getItem('role') || '';
+
   useEffect(() => {
     const fetchModalidades = async () => {
       try {
-        const docRef = doc(
-          bancoDeDados,
-          "tabelavirtual",
-          "V1g0AZ0EV0ZjLwViOYWb"
-        );
+        const docRef = doc(bancoDeDados, "tabelavirtual", "V1g0AZ0EV0ZjLwViOYWb");
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const data = docSnap.data();
           const items = data.itens || []; // Supondo que 'itens' seja o array no documento
 
-          const options = items.map((item) => ({
+          // Filtrar as opções com base na role do usuário
+          const filteredOptions = items.filter((item) => {
+            if (role === "karate") {
+              return item.nome.includes("Karatê"); // Exibe apenas opções relacionadas ao Karatê
+            } else if (role === "taekwondo") {
+              return item.nome.includes("Taekwondo"); // Exibe apenas opções relacionadas ao Taekwondo
+            } else if (role === "pilates") {
+              return item.nome.includes("Pilates"); // Exibe apenas opções relacionadas ao Taekwondo
+            } else if (role === "ginastica") {
+              return item.nome.includes("Ginastica"); // Exibe apenas opções relacionadas ao Taekwondo
+            } else if (role === "boxechines") {
+              return item.nome.includes("Boxe Chinês"); // Exibe apenas opções relacionadas ao Taekwondo
+            } else if (role === "jiujitsu") {
+              return item.nome.includes("Jiu Jítsu"); // Exibe apenas opções relacionadas ao Taekwondo
+            }
+
+            else {
+              return true; // Se a role for outra ou não definida, exibe todas as opções
+            }
+          });
+
+          // Adicionar as modalidades específicas
+          const options = filteredOptions.map((item) => ({
             value: item.valor,
             label: item.nome,
           }));
@@ -76,7 +96,10 @@ export function AlunoForm() {
     };
 
     fetchModalidades();
-  }, []);
+  }, [role]); // O hook será executado novamente sempre que a role mudar
+
+  console.log("modalidades: ", modalidades);
+
 
   useEffect(() => {
     if (isEditMode) {
@@ -146,6 +169,7 @@ export function AlunoForm() {
       atualizarMensalidade();
     }
   };
+
 
   const handleMaiorDeIdadeChange = (selectedOption) => {
     const value = selectedOption?.value === "sim";
@@ -315,6 +339,34 @@ export function AlunoForm() {
           dezembro: "pendente",
         },
         2028: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        },
+        2029: {
+          janeiro: "pendente",
+          fevereiro: "pendente",
+          março: "pendente",
+          abril: "pendente",
+          maio: "pendente",
+          junho: "pendente",
+          julho: "pendente",
+          agosto: "pendente",
+          setembro: "pendente",
+          outubro: "pendente",
+          novembro: "pendente",
+          dezembro: "pendente",
+        },
+        2030: {
           janeiro: "pendente",
           fevereiro: "pendente",
           março: "pendente",

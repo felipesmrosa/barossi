@@ -2,9 +2,7 @@ import {
   collection,
   doc,
   getDocs,
-  query,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -21,35 +19,60 @@ export function FinanceiroForm() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAluno, setSelectedAluno] = useState(null);
+  const [role, setRole] = useState(localStorage.getItem("role") || "");
   const navigate = useNavigate();
 
-  // Obtém o mês e o ano atuais
   const dataAtual = new Date();
   const anoAtual = dataAtual.getFullYear();
-  const mesAtual = dataAtual.toLocaleString("pt-BR", { month: "long" }).toLowerCase(); // "janeiro", "fevereiro"...
+  const mesAtual = dataAtual.toLocaleString("pt-BR", { month: "long" }).toLowerCase();
 
   useEffect(() => {
     const fetchAlunosPendentes = async () => {
       try {
         const alunosCollection = collection(bancoDeDados, "alunos");
         const querySnapshot = await getDocs(alunosCollection);
-        
-        const alunos = querySnapshot.docs
-        .map((doc) => {
+
+        const alunos = querySnapshot.docs.map((doc) => {
           const aluno = { id: doc.id, ...doc.data() };
           const mensalidades = aluno.mensalidades || {};
+
+          // Verifica o status de mensalidade para o mês atual
           const statusMesAtual = mensalidades[anoAtual]?.[mesAtual] || "pendente";
-          
-          // Retorna apenas alunos com mensalidade pendente
-          if (statusMesAtual !== "pago") {
-            return { ...aluno, statusMesAtual };
+
+          return {
+            ...aluno,
+            statusMesAtual,
+          };
+        });
+
+        // Filtra alunos com mensalidade pendente no mês atual
+        const alunosPendentes = alunos.filter((aluno) => aluno.statusMesAtual !== "pago");
+
+        // Modalidades Permitidas
+        const modalidadesPermitidas = {
+          karate: "Karatê",
+          taekwondo: "Taekwondo",
+          pilates: "Pilates",
+          ginastica: "Ginastica Ritmica",
+          boxechines: "Boxe Chinês",
+          jiujitsu: "Jiu Jítsu",
+        };
+
+        const alunosFiltrados = alunosPendentes.filter((aluno) => {
+          if (role === "admin") return true; // Se for admin, vê todos os alunos
+
+          if (Array.isArray(aluno.modalidades)) {
+            return role
+              ? aluno.modalidades.some((mod) =>
+                mod.label?.includes(modalidadesPermitidas[role])
+              )
+              : true;
           }
-          return null;
-        })
-        .filter(Boolean); // Remove valores nulos
-        
-        setAlunosPendentes(alunos);
-        setLoading(false)
+
+          return true; // Caso a modalidade não exista ou não seja um array, incluir no filtro
+        });
+
+        setAlunosPendentes(alunosFiltrados);
       } catch (error) {
         console.error("Erro ao buscar alunos pendentes: ", error);
         toast.error("Erro ao buscar alunos pendentes. Tente novamente.");
@@ -59,21 +82,15 @@ export function FinanceiroForm() {
     };
 
     fetchAlunosPendentes();
-  }, []);
+  }, [role]);
 
   if (loading) {
-    return Loading;
+    return <Loading />;
   }
-
-  // if (alunosPendentes.length === 0) {
-  //   return <p>Todos os alunos pagaram a mensalidade deste mês!</p>;
-  // }
 
   const marcarComoPago = async (alunoId, alunoMensalidades) => {
     try {
       const alunoRef = doc(bancoDeDados, "alunos", alunoId);
-
-      // Atualiza a mensalidade do mês atual para "pago"
       const mensalidadesAtualizadas = {
         ...alunoMensalidades,
         [anoAtual]: {
@@ -88,15 +105,14 @@ export function FinanceiroForm() {
       });
 
       toast.success(`Mensalidade de ${mesAtual} marcada como paga!`);
-
-      // Remove o aluno da lista após marcar como pago
-      setAlunosPendentes((prevAlunos) =>
-        prevAlunos.filter((aluno) => aluno.id !== alunoId)
-      );
+      setAlunosPendentes((prev) => prev.filter((aluno) => aluno.id !== alunoId));
     } catch (error) {
       toast.error("Erro ao atualizar o status. Tente novamente.");
     }
   };
+
+  console.log(alunosPendentes);
+
 
   return (
     <div className="fundoPadrao">
@@ -104,40 +120,35 @@ export function FinanceiroForm() {
       <Titulo
         voltarPagina={false}
         click={() => navigate("/financeiro")}
-        titulo={"Pendentes"}
-        botao={"Voltar"}
+        titulo="Pendentes"
+        botao="Voltar"
       />
       <div className="cardPadrao">
         {alunosPendentes.length === 0 ? (
           <p>Todos os alunos pagaram a mensalidade deste mês!</p>
         ) : (
           alunosPendentes.map((aluno) => (
-            <div
-              key={aluno.id}
-              className="cardPadrao__card"
-              style={{
-                padding: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
+            <div key={aluno.id} className="cardPadrao__card" id="mensalidade">
               <span>
-                <p style={{ textTransform: "none" }} className="cardPadrao__card__informacaoPrincipal">
+                <p className="cardPadrao__card__informacaoPrincipal">
                   <strong>Nome:</strong> {aluno.nomeCompleto}
                 </p>
                 <p className="cardPadrao__card__informacaoAdicional">
                   <strong>Status Pagamento ({mesAtual}):</strong> {aluno.statusMesAtual}
                 </p>
                 <p className="cardPadrao__card__informacaoAdicional">
-                  <strong>Mensalidade:</strong> R${" "}
-                  {parseFloat(aluno.mensalidade).toFixed(2)}
+                  <strong>Mensalidade:</strong> R$ {parseFloat(aluno.mensalidade).toFixed(2)}
                 </p>
+                {Array.isArray(aluno.modalidades) &&
+                  aluno.modalidades.map((modalidade, index) => (
+                    <p key={index} className="cardPadrao__card__informacaoAdicional">
+                      <strong>Modalidade:</strong> {modalidade.label}
+                    </p>
+                  ))}
               </span>
               <button
                 onClick={() => {
-                  setSelectedAluno(aluno); // Guarda todo o objeto do aluno
+                  setSelectedAluno(aluno);
                   setIsModalOpen(true);
                 }}
                 className="cardPadrao__card__marcarComoPago"
@@ -161,7 +172,6 @@ export function FinanceiroForm() {
         }}
         message="Você tem certeza que este aluno pagou?"
       />
-
     </div>
   );
 }

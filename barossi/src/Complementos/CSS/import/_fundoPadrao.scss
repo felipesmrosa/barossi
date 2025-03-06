@@ -49,10 +49,17 @@
   .cardPadrao {
     width: 100%;
 
+    div#mensalidade {
+      display: flex; 
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+    }
+
     &__card {
       border-radius: 6px;
       border: 1px solid $borda-card;
-      padding: 10px;
+      padding: 20px;
       margin: 8px 0;
       width: 100%;
       display: flex;

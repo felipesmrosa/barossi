@@ -35,7 +35,7 @@ const buscarAlunosPorModalidade = async () => {
         const nomesPadronizados = {
           "pilates": "Pilates", "karatê": "Karatê", "judô": "Judô",
           "taekwondo": "Taekwondo", "ginastica ritmica": "Ginastica",
-          "jiu-jítsu": "Jiu-Jítsu", "boxe chinês": "Boxe Chinês", "kung fu": "Kung Fu"
+          "jiu jítsu": "Jiu Jítsu", "boxe chinês": "Boxe Chinês", "kung fu": "Kung Fu"
         };
 
         Object.keys(nomesPadronizados).forEach((chave) => {
@@ -93,13 +93,61 @@ export function Financeiro() {
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
 
+  const userRole = localStorage.getItem("role");
+
   const abrirModal = () => setModal(true);
   const fecharModal = () => setModal(false);
+
+  // Função que verifica e filtra as modalidades com base na role
+  const filtrarModalidadesPorRole = (modalidades) => {
+    if (userRole === "admin") {
+      return modalidades; // Admin vê todas as modalidades
+    }
+
+    if (userRole === "karate") {
+      return modalidades.filter((modalidade) => {
+        return (
+          modalidade.nome.toLowerCase().includes("karatê") ||
+          modalidade.nome.toLowerCase().includes("2x karatê") ||
+          modalidade.nome.toLowerCase().includes("3x karatê")
+        );
+      });
+    }
+
+    if (userRole === "pilates") {
+      return modalidades.filter((modalidade) => {
+        return (
+          modalidade.nome.toLowerCase().includes("pilates") ||
+          modalidade.nome.toLowerCase().includes("2x pilates") ||
+          modalidade.nome.toLowerCase().includes("3x pilates")
+        );
+      });
+    }
+
+    if (userRole === "boxechines") {
+      return modalidades.filter((modalidade) => {
+        return (
+          modalidade.nome.toLowerCase().includes("boxe")
+        );
+      });
+    }
+
+    if (userRole === "jiujitsu") {
+      return modalidades.filter((modalidade) => {
+        const nomeNormalizado = modalidade.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return nomeNormalizado.includes("jiu jitsu");
+      });
+    }
+
+    // Para outras roles, ajuste o filtro conforme necessário
+    return modalidades.filter((modalidade) => modalidade.nome.toLowerCase().includes(userRole.toLowerCase()));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       const { modalidades, totalPago, totalPendente } = await buscarAlunosPorModalidade();
-      setModalidades(modalidades);
+      const modalidadesFiltradas = filtrarModalidadesPorRole(modalidades);
+      setModalidades(modalidadesFiltradas);
       setTotalPago(totalPago);
       setTotalPendente(totalPendente);
       setLoading(false);
@@ -119,6 +167,7 @@ export function Financeiro() {
         click={() => navigate("/financeiro/controlar")}
         titulo={"Financeiro"}
         botao={"Controlar"}
+        userRole={userRole}
       />
 
       {loading ? (
@@ -139,12 +188,15 @@ export function Financeiro() {
               </div>
             </div>
           ))}
+          <br />
         </div>
       )}
-      <div className="precoGeral">
-        <h3>TOTAL PENDENTE: R$ {totalPendente.toFixed(2)}</h3>
-        <h3>TOTAL PAGO: R$ {totalPago.toFixed(2)}</h3>
-      </div>
+      {userRole === "admin" && (
+        <div className="precoGeral">
+          <h3>TOTAL PENDENTE: R$ {totalPendente.toFixed(2)}</h3>
+          <h3>TOTAL PAGO: R$ {totalPago.toFixed(2)}</h3>
+        </div>
+      )}
       <button className="exportar" onClick={abrirModal}>EXPORTAR RELATÓRIO</button>
       {modal && (
         <ExportarModal fecharModal={fecharModal} />
@@ -152,3 +204,4 @@ export function Financeiro() {
     </div>
   );
 }
+

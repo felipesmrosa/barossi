@@ -14,37 +14,48 @@ const ExportarModal = ({ fecharModal }) => {
     // Buscar dados dos alunos no Firestore
     useEffect(() => {
         const fetchAlunos = async () => {
-            const alunosRef = collection(bancoDeDados, "alunos");
-            const alunoSnapshot = await getDocs(alunosRef);
-            const alunosList = alunoSnapshot.docs.map((doc) => {
-                const aluno = doc.data();
-                const alunoId = doc.id;
+            try {
+                const alunosRef = collection(bancoDeDados, "alunos");
+                const alunoSnapshot = await getDocs(alunosRef);
 
-                // Verifique se mensalidades é um objeto ou array válido
-                const mensalidades = aluno.mensalidades || {}; // Assume que mensalidades é um objeto por ano
+                if (alunoSnapshot.empty) {
+                    console.log("Nenhum aluno encontrado");
+                    return;
+                }
 
-                // Extraindo os anos das mensalidades
-                const anosUnicos = Object.keys(mensalidades); // Usamos Object.keys para pegar os anos como chave
-                const anosFiltrados = anosUnicos; // Os anos já são únicos, então podemos usá-los diretamente
+                const alunosList = alunoSnapshot.docs.map((doc) => {
+                    const aluno = doc.data();
+                    const alunoId = doc.id;
 
-                return {
-                    id: alunoId,
-                    nome: aluno.nomeCompleto,
-                    cpf: aluno.cpf,
-                    telefone: aluno.whatsapp,
-                    valorMensalidade: parseFloat(aluno.mensalidade) || 0, // Convertendo mensalidade para número
-                    mensalidades: mensalidades,
-                    anos: anosFiltrados,
-                };
-            });
-            setAlunos(alunosList);
+                    // Verifique se mensalidades é um objeto ou array válido
+                    const mensalidades = aluno.mensalidades || {}; // Assume que mensalidades é um objeto por ano
 
-            // Unificando anos de todos os alunos
-            const anosSet = new Set();
-            alunosList.forEach(aluno => {
-                aluno.anos.forEach(ano => anosSet.add(ano));
-            });
-            setAnos([...anosSet]); // Definindo os anos únicos
+                    // Extraindo os anos das mensalidades
+                    const anosUnicos = Object.keys(mensalidades); // Usamos Object.keys para pegar os anos como chave
+                    const anosFiltrados = anosUnicos; // Os anos já são únicos, então podemos usá-los diretamente
+
+                    return {
+                        id: alunoId,
+                        nome: aluno.nomeCompleto,
+                        cpf: aluno.cpf,
+                        telefone: aluno.whatsapp,
+                        valorMensalidade: parseFloat(aluno.mensalidade) || 0, // Convertendo mensalidade para número
+                        mensalidades: mensalidades,
+                        anos: anosFiltrados,
+                        modalidade: aluno.modalidades,
+                    };
+                });
+                setAlunos(alunosList);
+
+                // Unificando anos de todos os alunos
+                const anosSet = new Set();
+                alunosList.forEach(aluno => {
+                    aluno.anos.forEach(ano => anosSet.add(ano));
+                });
+                setAnos([...anosSet]); // Definindo os anos únicos
+            } catch (error) {
+                console.error("Erro ao buscar alunos: ", error);
+            }
         };
 
         fetchAlunos();
@@ -69,18 +80,40 @@ const ExportarModal = ({ fecharModal }) => {
 
         // Chama a função correspondente
         if (tipoExportacao === "csv") {
-            exportarCSV(alunoSelecionado, anoSelecionado, alunos);
+            exportarCSV(alunoSelecionado, anoSelecionado, alunosFiltrados, role);
         } else if (tipoExportacao === "excel") {
-            exportarExcel(alunoSelecionado, anoSelecionado, alunos);
+            exportarExcel(alunoSelecionado, anoSelecionado, alunosFiltrados, role);
         } else if (tipoExportacao === "pdf") {
-            exportarPDF(alunoSelecionado, anoSelecionado, alunos);
+            exportarPDF(alunoSelecionado, anoSelecionado, alunosFiltrados, role);
         }
 
         fecharModal();
     };
 
-    return (
+    const role = localStorage.getItem('role') || '';
 
+    // Filtra os alunos com base na modalidade e na role
+    const alunosFiltrados = alunos.filter((aluno) => {
+        return aluno.modalidade.some((mod) => {
+            if (role === "karate") {
+                return mod.label === "2x Karatê" || mod.label === "3x Karatê";
+            } else if (role === "taekwondo") {
+                return mod.label.includes("Taekwondo");
+            } else if (role === "pilates") {
+                return mod.label.includes("Pilates");
+            } else if (role === "ginastica") {
+                return mod.label.includes("Ginastica");
+            } else if (role === "boxechines") {
+                return mod.label.includes("Boxe Chinês");
+            } else if (role === "jiujitsu") {
+                return mod.label.includes("Jiu Jítsu");
+            } else {
+                return true; // Caso a role não esteja definida ou seja diferente das listadas, exibe todos os alunos
+            }
+        });
+    });
+
+    return (
         <div className="modal">
             <div className="modal-content">
                 <h2>Dados para Exportação</h2>
@@ -92,7 +125,7 @@ const ExportarModal = ({ fecharModal }) => {
                         onChange={(e) => setAlunoSelecionado(e.target.value)}
                     >
                         <option value="todos">Todos</option>
-                        {alunos.map((aluno) => (
+                        {alunosFiltrados.map((aluno) => (
                             <option key={aluno.id} value={aluno.id}>
                                 {aluno.nome}
                             </option>

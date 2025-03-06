@@ -2,9 +2,25 @@ import { jsPDF } from "jspdf";
 import footerrosatech from "@/Complementos/Imagens/footerrosatech.png";
 import headerrosatech from "@/Complementos/Imagens/headerrosatech.png";
 
-export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos) => {
+export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos, role) => {
     let dados = alunos;
 
+    // Se não for admin, filtra os alunos pela modalidade
+    if (role !== "admin") {
+        dados = dados.filter((aluno) => {
+            return aluno.modalidade.some((mod) => {
+                if (role === "karate") return mod.label.includes("Karatê");
+                if (role === "taekwondo") return mod.label.includes("Taekwondo");
+                if (role === "pilates") return mod.label.includes("Pilates");
+                if (role === "ginastica") return mod.label.includes("Ginastica");
+                if (role === "boxechines") return mod.label.includes("Boxe Chinês");
+                if (role === "jiujitsu") return mod.label.includes("Jiu Jítsu");
+                return false; 
+            });
+        });
+    }
+
+    // Aplicando filtro de alunoSelecionado se não for "todos"
     if (alunoSelecionado !== "todos") {
         dados = dados.filter((aluno) => aluno.id === alunoSelecionado);
     }
@@ -17,7 +33,7 @@ export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos) => {
     const pageHeight = doc.internal.pageSize.getHeight();
     const footerHeight = 30;
     const headerHeight = 40;
-    let yPosition = headerHeight + 20; // Começar após o cabeçalho
+    let yPosition = headerHeight + 20;
 
     const meses = [
         "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -26,7 +42,7 @@ export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos) => {
 
     const adicionarCabecalho = () => {
         doc.addImage(headerrosatech, "PNG", 0, 0, pageWidth, headerHeight);
-        yPosition = headerHeight + 20; // Resetar posição do conteúdo após o cabeçalho
+        yPosition = headerHeight + 20;
     };
 
     const adicionarRodape = () => {
@@ -35,7 +51,7 @@ export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos) => {
 
     dados.forEach((item, index) => {
         if (index > 0) {
-            doc.addPage(); // Nova página para cada aluno
+            doc.addPage();
         }
 
         adicionarCabecalho();
@@ -45,15 +61,14 @@ export const exportarPDF = (alunoSelecionado, anoSelecionado, alunos) => {
 
         const nomeAluno = item.nomeCompleto || item.nome || "Nome não disponível";
 
-        // Cabeçalho do aluno (um abaixo do outro)
         doc.text(`Aluno: ${nomeAluno}`, 20, yPosition);
         yPosition += 8;
         doc.text(`CPF: ${item.cpf}`, 20, yPosition);
         yPosition += 8;
         doc.text(`Valor Mensalidade: ${item.valorMensalidade}`, 20, yPosition);
-        yPosition += 16; // Espaçamento antes de listar os meses
+        yPosition += 16;
         doc.text(`Ano Selecionado: ${anoFinal}`, 20, yPosition);
-        yPosition += 16; // Espaçamento antes de listar os meses
+        yPosition += 16;
 
         meses.forEach((mes) => {
             const mensalidadeMes = mensalidadesAnoSelecionado[mes] || "Pendente";

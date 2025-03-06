@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import logo from "@/Complementos/Imagens/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,19 @@ import { NotificationIcon } from "../FundoPadrao/Notificacoes/Index";
 export function Layout() {
   const [menuAberto, setMenuAberto] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const role = localStorage.getItem("role"); // Pegando o tipo de usuário
+  const emailAutenticado = localStorage.getItem("emailAutenticado"); // Pegando o e-mail autenticado
+
+  // Lista de e-mails com roles específicas
+  const usuarioRestrito = [
+    "karate@barossi.com",
+    "pilates@barossi.com",
+    "taekwondo@barossi.com",
+    "ginastica@barossi.com",
+    "jiujitsu@barossi.com",
+    "boxechines@barossi.com"
+  ];
 
   // Função para alternar a visibilidade do menu de notificações
   const toggleNotifications = () => {
@@ -25,6 +38,14 @@ export function Layout() {
     }
   };
 
+  const handleLogOut = () => {
+    // Limpar os dados do localStorage (email, role, ou outros dados de autenticação)
+    localStorage.clear();
+
+    // Redirecionar para a página de login
+    window.location.href = "/"; // Ou use o react-router para redirecionar, se necessário
+  };
+
   return (
     <div className={`layout ${menuAberto ? "menu-aberto" : ""}`}>
       <header className="cabecalho">
@@ -39,45 +60,74 @@ export function Layout() {
             <FontAwesomeIcon icon={faBell} size="lg" />
           </div>
         </div>
-        {isOpen && (
-          <NotificationIcon />
-        )}
+        {isOpen && <NotificationIcon />}
       </header>
 
       {/* Sidebar */}
       <aside className={`sidebar ${menuAberto ? "open" : ""}`}>
         <nav>
           <ul>
-            <li>
-              <Link to="/dashboard" onClick={handleLinkClick}>
-                <FontAwesomeIcon icon={faHouse} />
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/alunos" onClick={handleLinkClick}>
-                <FontAwesomeIcon icon={faUsers} />
-                Alunos
-              </Link>
-            </li>
-            <li>
-              <Link to="/financeiro" onClick={handleLinkClick}>
-                <FontAwesomeIcon icon={faMoneyBill} />
-                Financeiro
-              </Link>
-            </li>
-            <li>
-              <Link to="/tabela-virtual" onClick={handleLinkClick}>
-                <FontAwesomeIcon icon={faTag} />
-                Tabela Virtual
-              </Link>
-            </li>
+            {/* Menu completo para o guilherme@barossi.com */}
+            {emailAutenticado === "guilherme@barossi.com" ? (
+              <>
+                <li>
+                  <Link to="/dashboard" onClick={handleLinkClick}>
+                    <FontAwesomeIcon icon={faHouse} />
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/alunos" onClick={handleLinkClick}>
+                    <FontAwesomeIcon icon={faUsers} />
+                    Alunos
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/tabela-virtual" onClick={handleLinkClick}>
+                    <FontAwesomeIcon icon={faTag} />
+                    Tabela Virtual
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/financeiro" onClick={handleLinkClick}>
+                    <FontAwesomeIcon icon={faMoneyBill} />
+                    Financeiro
+                  </Link>
+                </li>
+              </>
+            ) : (
+              // Menu restrito para outros usuários
+              <>
+                {usuarioRestrito.includes(emailAutenticado) && (
+                  <>
+                    <li>
+                      <Link to="/dashboard" onClick={handleLinkClick}>
+                        <FontAwesomeIcon icon={faHouse} />
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/alunos" onClick={handleLinkClick}>
+                        <FontAwesomeIcon icon={faUsers} />
+                        Alunos
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/financeiro" onClick={handleLinkClick}>
+                        <FontAwesomeIcon icon={faTag} />
+                        Relatórios
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </>
+            )}
           </ul>
         </nav>
 
         {/* Link Sair separado */}
         <div className="sidebar__logout">
-          <Link to="/logout" onClick={handleLinkClick}>
+          <Link onClick={handleLogOut}>
             <FontAwesomeIcon icon={faRightFromBracket} />
             Sair
           </Link>

@@ -29,7 +29,7 @@ import Modal from "@/Componentes/Modal/ConfirmarDelete";
 export function Alunos() {
   const alunosBD = collection(bancoDeDados, "alunos");
   const [alunos, setAlunos] = useState([]);
-  const [modalidades, setModalidades] = useState([]); // Estado para armazenar as modalidades
+  const [modalidades, setModalidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastVisible, setLastVisible] = useState(null);
   const [hasMore, setHasMore] = useState(true);
@@ -38,6 +38,8 @@ export function Alunos() {
   const [search, setSearch] = useState("");
   const [selectedModalidade, setSelectedModalidade] = useState("");
   const navigate = useNavigate();
+
+  const userRole = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchAlunos = async () => {
@@ -71,7 +73,7 @@ export function Alunos() {
 
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setModalidades(data.itens); // Presumindo que 'itens' seja o array de modalidades
+          setModalidades(data.itens);
         } else {
           console.error("Documento não encontrado!");
         }
@@ -128,21 +130,49 @@ export function Alunos() {
     const normalizedWhatsapp = removeMask(aluno.whatsapp || "");
     const normalizedNomeCompleto = normalizeText(aluno.nomeCompleto || "");
 
+    // Verificar se a pesquisa corresponde ao CPF, WhatsApp ou Nome
     const searchMatch =
       normalizedCpf.includes(normalizedSearch) ||
       normalizedWhatsapp.includes(normalizedSearch) ||
       normalizedNomeCompleto.includes(normalizedSearch);
 
+    // Verificação de modalidades: filtrar com base na seleção do usuário
     const modalidadeMatch = selectedModalidade
       ? aluno.modalidades?.some(
-          (modalidade) =>
-            normalizeText(modalidade.label) ===
-            normalizeText(selectedModalidade)
-        )
+        (modalidade) => normalizeText(modalidade.label) === normalizeText(selectedModalidade)
+      )
       : true;
 
-    return searchMatch && modalidadeMatch;
+    // Obter a role do localStorage e verificar se ela corresponde à condição
+    const userRole = localStorage.getItem("role");
+    const roleMatch = userRole
+      ? aluno.modalidades?.some((modalidade) => {
+        // Verifica se a role do usuário corresponde a uma modalidade do aluno
+        switch (userRole) {
+          case "admin":
+            return true; // Admin pode ver todos os alunos
+          case "karate":
+            return ["2x Karatê", "3x Karatê"].includes(modalidade.label);
+          case "pilates":
+            return ["2x Pilates", "3x Pilates"].includes(modalidade.label);
+          case "taekwondo":
+            return ["Taekwondo"].includes(modalidade.label);
+          case "ginastica":
+            return ["Ginastica Ritmica"].includes(modalidade.label);
+          case "jiujitsu":
+            return ["Jiu Jítsu"].includes(modalidade.label);
+          case "boxechines":
+            return ["Boxe Chinês"].includes(modalidade.label);
+          default:
+            return false; // Caso a role não corresponda a nenhuma das modalidades
+        }
+      })
+      : true;
+
+    // Retornar os alunos que atendem a todos os critérios de busca, modalidades e role
+    return searchMatch && modalidadeMatch && roleMatch;
   });
+
 
   const handleDelete = async (id) => {
     try {
@@ -177,14 +207,16 @@ export function Alunos() {
           onChange={handleSearchChange}
           id="pesquisar"
         />
-        <select value={selectedModalidade} onChange={handleModalidadeChange}>
-          <option value="">Todas Modalidades</option>
-          {modalidades.map((modalidade) => (
-            <option key={modalidade.id} value={modalidade.nome}>
-              {modalidade.nome}
-            </option>
-          ))}
-        </select>
+        {userRole === "admin" && (
+          <select value={selectedModalidade} onChange={handleModalidadeChange}>
+            <option value="">Todas Modalidades</option>
+            {modalidades.map((modalidade) => (
+              <option key={modalidade.id} value={modalidade.nome}>
+                {modalidade.nome}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="cardPadrao">
