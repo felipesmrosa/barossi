@@ -6,7 +6,7 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { bancoDeDados } from "@/firebase";
+// import { bancoDeDados } from "@/firebase";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
@@ -29,7 +29,7 @@ export function FinanceiroForm() {
   useEffect(() => {
     const fetchAlunosPendentes = async () => {
       try {
-        const alunosCollection = collection(bancoDeDados, "alunos");
+        // const alunosCollection = collection(bancoDeDados, "alunos");
         const querySnapshot = await getDocs(alunosCollection);
 
         const alunos = querySnapshot.docs.map((doc) => {

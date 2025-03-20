@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { bancoDeDados } from "@/firebase"; // Importando o banco de dados
+// import { bancoDeDados } from "@/firebase"; // Importando o banco de dados
 import { collection, getDocs } from "firebase/firestore";
-import { exportarCSV } from "@/utils/exportarFuncoes/exportarCSV"; // Funções para exportação
-import { exportarExcel } from "@/utils/exportarFuncoes/exportarExcel"; // Funções para exportação
-import { exportarPDF } from "@/utils/exportarFuncoes/exportarPDF"; // Funções para exportação
+// import { exportarCSV } from "@/utils/exportarFuncoes/exportarCSV"; // Funções para exportação
+// import { exportarExcel } from "@/utils/exportarFuncoes/exportarExcel"; // Funções para exportação
+// import { exportarPDF } from "@/utils/exportarFuncoes/exportarPDF"; // Funções para exportação
 
 const ExportarModal = ({ fecharModal }) => {
     const [alunos, setAlunos] = useState([]);
@@ -15,7 +15,7 @@ const ExportarModal = ({ fecharModal }) => {
     useEffect(() => {
         const fetchAlunos = async () => {
             try {
-                const alunosRef = collection(bancoDeDados, "alunos");
+                // const alunosRef = collection(bancoDeDados, "alunos");
                 const alunoSnapshot = await getDocs(alunosRef);
 
                 if (alunoSnapshot.empty) {

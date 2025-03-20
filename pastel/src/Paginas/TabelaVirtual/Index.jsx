@@ -4,12 +4,12 @@ import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { useNavigate } from "react-router-dom";
 import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
 import { collection, getDocs, query, deleteDoc, doc } from "firebase/firestore";
-import { bancoDeDados } from "@/firebase.js";
+import { db } from "@/firebase.js";
 import { Loading } from "@/Componentes/Loading/Index";
 import Modal from "@/Componentes/Modal/ConfirmarDelete";
 
 export function TabelaVirtual() {
-  const tabelaBD = collection(bancoDeDados, "tabelavirtual");
+  const tabelaBD = collection(db, "tabelavirtual");
   const [tabelas, setTabelas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +41,7 @@ export function TabelaVirtual() {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(bancoDeDados, "tabelavirtual", id));
+      await deleteDoc(doc(db, "tabelavirtual", id));
       setTabelas((prevTabelas) => prevTabelas.filter((aluno) => aluno.id !== id));
       toast.success("Aluno excluído com sucesso!");
     } catch (error) {
@@ -58,8 +58,8 @@ export function TabelaVirtual() {
       <ToastContainer autoClose={500} />
       <Titulo
         voltarPagina={false}
-        click={() => navigate("/tabela-virtual/adicionar")}
-        titulo={"Tabela Virtual"}
+        click={() => navigate("/sabores/adicionar")}
+        titulo={"Sabores"}
         botao={"Adicionar"}
       />
 
@@ -85,7 +85,7 @@ export function TabelaVirtual() {
                 {tabela.descricao}
               </p>
               <BotoesDeAcao
-                onEdit={() => navigate(`/tabela-virtual/editar/${tabela.id}`)}
+                onEdit={() => navigate(`/sabores/editar/${tabela.id}`)}
                 onDelete={() => {
                   setSelectedTabela(tabela.id);
                   setIsModalOpen(true);

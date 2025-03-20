@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormInputCard } from "@/Componentes/FundoPadrao/FormInputCard/Index";
-import { bancoDeDados } from "@/firebase.js";
+import { db } from "@/firebase.js";
 import { collection, addDoc, doc, updateDoc, getDoc } from "firebase/firestore";
 import { BotoesDeAcao } from "@/Componentes/FundoPadrao/BotoesDeAcao/Index";
 import { ModalTabelaVirtual } from "@/Componentes/Modal/ModalTabelaVirtual";
@@ -16,14 +16,14 @@ export function TabelaForm() {
   const [items, setItems] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [newItem, setNewItem] = useState({ nome: "", descricao: "", valor: "" });
-  const [form, setForm] = useState({ nomeDaTabela: "", descricao: ""});
+  const [form, setForm] = useState({ nomeDaTabela: "", descricao: "" });
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
     const fetchTabela = async () => {
       if (isEditMode) {
         try {
-          const tabelaDoc = doc(bancoDeDados, "tabelavirtual", id);
+          const tabelaDoc = doc(db, "tabelavirtual", id);
           const tabelaData = await getDoc(tabelaDoc);
           if (tabelaData.exists()) {
             const tabela = tabelaData.data();
@@ -100,12 +100,12 @@ export function TabelaForm() {
     if (!validateForm()) return;
 
     try {
-      await addDoc(collection(bancoDeDados, "tabelavirtual"), {
+      await addDoc(collection(db, "tabelavirtual"), {
         ...form,
-        itens: items,
+        itens: items, // Adicionando os itens dentro da tabela
       });
       toast.success("Tabela adicionada com sucesso!");
-      navigate("/tabela-virtual");
+      navigate("/sabores");
     } catch (error) {
       toast.error("Erro ao adicionar tabela!");
     }
@@ -115,13 +115,13 @@ export function TabelaForm() {
     if (!validateForm()) return;
 
     try {
-      const tabelaDoc = doc(bancoDeDados, "tabelavirtual", id);
+      const tabelaDoc = doc(db, "tabelavirtual", id);
       await updateDoc(tabelaDoc, {
         ...form,
         itens: items,
       });
       toast.success("Tabela atualizada com sucesso!");
-      navigate("/tabela-virtual");
+      navigate("/sabores");
     } catch (error) {
       toast.error("Erro ao atualizar tabela!");
     }
@@ -132,7 +132,7 @@ export function TabelaForm() {
       <ToastContainer autoClose={500} />
       <Titulo
         voltarPagina={true}
-        link={"/tabela-virtual"}
+        link={"/sabores"}
         titulo={isEditMode ? "Editar Tabela" : "Nova Tabela"}
         botao={isEditMode ? "Atualizar" : "Cadastrar"}
         click={isEditMode ? editarTabela : adicionarTabela}

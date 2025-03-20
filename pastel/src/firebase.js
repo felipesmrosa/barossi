@@ -1,36 +1,18 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-const firebaseApp = initializeApp({
-  apiKey: "AIzaSyCztIgdp8yWANUJNHoYBIMXHYKZKOuuqZw",
-  authDomain: "academybarossi.firebaseapp.com",
-  projectId: "academybarossi",
-  storageBucket: "academybarossi.appspot.com",
-  messagingSenderId: "563906480315",
-  appId: "1:563906480315:web:a3defa038e597a6d90419e",
-});
-
-export const bancoDeDados = getFirestore(firebaseApp);
-
-// Autenticação / LOGIN | CADASTRO
-import { getAuth } from "firebase/auth";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCztIgdp8yWANUJNHoYBIMXHYKZKOuuqZw",
-  authDomain: "academybarossi.firebaseapp.com",
-  projectId: "academybarossi",
-  storageBucket: "academybarossi.appspot.com",
-  messagingSenderId: "563906480315",
-  appId: "1:563906480315:web:a3defa038e597a6d90419e",
+  apiKey: "AIzaSyBqgF6_tAfYDs9moBOv-zDYDUL_LpHm1Ik",
+  authDomain: "mundo-pastel04.firebaseapp.com",
+  projectId: "mundo-pastel04",
+  storageBucket: "mundo-pastel04.firebasestorage.app",
+  messagingSenderId: "774780087056",
+  appId: "1:774780087056:web:7b1f01d89dd4b643029395",
+  measurementId: "G-7YRL2W003R"
 };
 
-// Inicialize o Firebase
+// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Inicialize a autenticação
-const auth = getAuth(app);
-
-// Exporte a instância de autenticação
-export { auth };
-
+export { db };

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "@/Complementos/Imagens/logo.png";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export function Login() {
@@ -8,11 +7,21 @@ export function Login() {
     email: "",
     senha: "",
   });
+  const [loading, setLoading] = useState(false); // Para gerenciar o estado de carregamento
+  const [error, setError] = useState(""); // Para gerenciar erros de login
   const navigate = useNavigate();
   const auth = getAuth();
 
   const handleLogin = async () => {
     const { email, senha } = formData;
+
+    // Verificando se os campos não estão vazios
+    if (!email || !senha) {
+      setError("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    setLoading(true); // Começa o carregamento
 
     try {
       await signInWithEmailAndPassword(auth, email, senha);
@@ -21,19 +30,27 @@ export function Login() {
       localStorage.setItem("emailAutenticado", email);
       localStorage.setItem("senhaAutenticada", senha);
 
-      // Redireciona sempre para o dashboard, sem checar tipo de usuário
-      navigate("/dashboard");
-
+      // Redireciona para o dashboard
+      navigate("/mesas");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
+
+      // Tratando o erro de autenticação
+      if (error.code === "auth/user-not-found") {
+        setError("Usuário não encontrado.");
+      } else if (error.code === "auth/wrong-password") {
+        setError("Senha incorreta.");
+      } else {
+        setError("Erro ao fazer login. Tente novamente.");
+      }
+    } finally {
+      setLoading(false); // Finaliza o carregamento
     }
   };
 
   return (
     <div className="login">
       <div className="login__container">
-        <img className="login__container--logo" src={Logo} alt="" />
-
         <div className="login__formulario">
           <div className="login__formulario__input">
             <label id="required"> Email </label>
@@ -61,9 +78,12 @@ export function Login() {
               }
             />
           </div>
+          {error && <div className="login__error">{error}</div>} {/* Exibe o erro, se houver */}
           <br />
 
-          <button onClick={handleLogin}>LOGAR</button>
+          <button onClick={handleLogin} disabled={loading}>
+            {loading ? "Carregando..." : "LOGAR"}
+          </button>
         </div>
       </div>
     </div>

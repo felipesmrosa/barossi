@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { Titulo } from "@/Componentes/FundoPadrao/Titulo/Index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { bancoDeDados } from "@/firebase.js";
+// import { bancoDeDados } from "@/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
 import { Loading } from "@/Componentes/Loading/Index";
 import ExportarModal from "./ExportarModal/Index";

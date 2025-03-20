@@ -29,7 +29,7 @@ const PrivateRoute = ({ element, allowedRoles = [] }) => {
   }
 
   // Se o usuário não estiver autenticado ou não tiver permissão, redireciona
-  return <Navigate to="/dashboard" />;
+  return <Navigate to="/mesas" />;
 };
 
 export default PrivateRoute;

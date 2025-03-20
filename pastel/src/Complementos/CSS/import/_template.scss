@@ -30,15 +30,16 @@
         color: $amarelo;
       }
     }
-
   }
 
   img {
     width: 100%;
-    max-width: 3%;
+    max-width: 80px; /* Ajuste o tamanho máximo da logo */
+    height: auto; /* Mantém a proporção da imagem */
   }
 }
 
+/* Menu de Notificação */
 .notification-menu {
   position: absolute;
   top: 70px;
@@ -62,6 +63,7 @@
   }
 }
 
+/* Menu Hamburguer */
 .menu-toggle {
   display: none;
   background: none;
@@ -172,8 +174,6 @@
   /* Adicionando essa linha para mudar a cor do ícone no logout */
 }
 
-
-
 /* Conteúdo */
 .conteudo {
   grid-area: conteudo;
@@ -196,10 +196,12 @@
 
   /* Cabeçalho */
   .cabecalho {
-    img {
-      width: 100%;
-      max-width: 18%;
-    }
+    padding: 0 20px; /* Menos espaço nas laterais */
+  }
+
+  .cabecalho img {
+    max-width: 70px; /* Tamanho fixo da logo */
+    width: auto; /* A logo vai ajustar automaticamente a largura sem distorção */
   }
 
   .sidebar {
